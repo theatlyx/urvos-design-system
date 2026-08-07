@@ -1,0 +1,186 @@
+// ==========================================================================
+// URVOS & NORD DESIGN TOKENS (SCSS)
+// Generated automatically from tokens/tokens.json. Do not edit directly.
+// ==========================================================================
+
+// ===== COLOR SYSTEM =====
+$n-color-general-accent: #0B5B8E;
+$urvos-color-general-accent: #0B5B8E;
+$n-color-general-accent-hover: #094B77;
+$urvos-color-general-accent-hover: #094B77;
+$n-color-general-accent-active: #073B5E;
+$urvos-color-general-accent-active: #073B5E;
+$n-color-general-active: #0EA968;
+$urvos-color-general-active: #0EA968;
+$n-color-general-icon: #5A5E72;
+$urvos-color-general-icon: #5A5E72;
+$n-color-general-icon-hover: #111322;
+$urvos-color-general-icon-hover: #111322;
+$n-color-general-focus-ring: rgba(11, 91, 142, 0.4);
+$urvos-color-general-focus-ring: rgba(11, 91, 142, 0.4);
+$n-color-text-primary: #111322;
+$urvos-color-text-primary: #111322;
+$n-color-text-secondary: #5A5E72;
+$urvos-color-text-secondary: #5A5E72;
+$n-color-text-tertiary: #6B7089;
+$urvos-color-text-tertiary: #6B7089;
+$n-color-text-ink: #12102A;
+$urvos-color-text-ink: #12102A;
+$n-color-text-inverse: #FFFFFF;
+$urvos-color-text-inverse: #FFFFFF;
+$n-color-text-link: #0B5B8E;
+$urvos-color-text-link: #0B5B8E;
+$n-color-border-default: #E7E9F2;
+$urvos-color-border-default: #E7E9F2;
+$n-color-border-strong: #D6DAE6;
+$urvos-color-border-strong: #D6DAE6;
+$n-color-border-focus: #0B5B8E;
+$urvos-color-border-focus: #0B5B8E;
+$n-color-border-subtle: rgba(231, 233, 242, 0.6);
+$urvos-color-border-subtle: rgba(231, 233, 242, 0.6);
+$n-color-background-canvas: #F4F5FA;
+$urvos-color-background-canvas: #F4F5FA;
+$n-color-background-surface: #FFFFFF;
+$urvos-color-background-surface: #FFFFFF;
+$n-color-background-surface-soft: #F7F8FC;
+$urvos-color-background-surface-soft: #F7F8FC;
+$n-color-background-raised: #FFFFFF;
+$urvos-color-background-raised: #FFFFFF;
+$n-color-background-lowered: #EEF0F7;
+$urvos-color-background-lowered: #EEF0F7;
+$n-color-background-hover: rgba(17, 19, 34, 0.04);
+$urvos-color-background-hover: rgba(17, 19, 34, 0.04);
+$n-color-status-danger: #DE3F68;
+$urvos-color-status-danger: #DE3F68;
+$n-color-status-danger-dark: #A82C4E;
+$urvos-color-status-danger-dark: #A82C4E;
+$n-color-status-success: #0EA968;
+$urvos-color-status-success: #0EA968;
+$n-color-status-success-dark: #0A7C4C;
+$urvos-color-status-success-dark: #0A7C4C;
+$n-color-status-warning: #DE8A16;
+$urvos-color-status-warning: #DE8A16;
+$n-color-status-warning-dark: #A6650C;
+$urvos-color-status-warning-dark: #A6650C;
+$n-color-status-info: #2F6FED;
+$urvos-color-status-info: #2F6FED;
+$n-color-status-info-dark: #1E4FB0;
+$urvos-color-status-info-dark: #1E4FB0;
+$n-color-status-highlight: #8B5CF6;
+$urvos-color-status-highlight: #8B5CF6;
+$n-color-status-progress: #0284C7;
+$urvos-color-status-progress: #0284C7;
+$n-color-statusWeak-danger-weak: #FDECEF;
+$urvos-color-statusWeak-danger-weak: #FDECEF;
+$n-color-statusWeak-success-weak: #E4FBF1;
+$urvos-color-statusWeak-success-weak: #E4FBF1;
+$n-color-statusWeak-warning-weak: #FEF3E2;
+$urvos-color-statusWeak-warning-weak: #FEF3E2;
+$n-color-statusWeak-info-weak: #E7F0FE;
+$urvos-color-statusWeak-info-weak: #E7F0FE;
+$n-color-statusWeak-highlight-weak: #F3E8FF;
+$urvos-color-statusWeak-highlight-weak: #F3E8FF;
+$n-color-tiles-violet-bg: #EFEBFE;
+$urvos-color-tiles-violet-bg: #EFEBFE;
+$n-color-tiles-violet-fg: #7C5CFC;
+$urvos-color-tiles-violet-fg: #7C5CFC;
+$n-color-tiles-blue-bg: #E7F0FE;
+$urvos-color-tiles-blue-bg: #E7F0FE;
+$n-color-tiles-blue-fg: #2F6FED;
+$urvos-color-tiles-blue-fg: #2F6FED;
+$n-color-tiles-amber-bg: #FEF3E2;
+$urvos-color-tiles-amber-bg: #FEF3E2;
+$n-color-tiles-amber-fg: #DE8A16;
+$urvos-color-tiles-amber-fg: #DE8A16;
+$n-color-tiles-rose-bg: #FDECEF;
+$urvos-color-tiles-rose-bg: #FDECEF;
+$n-color-tiles-rose-fg: #DE3F68;
+$urvos-color-tiles-rose-fg: #DE3F68;
+$n-color-tiles-mint-bg: #E4FBF1;
+$urvos-color-tiles-mint-bg: #E4FBF1;
+$n-color-tiles-mint-fg: #0EA968;
+$urvos-color-tiles-mint-fg: #0EA968;
+
+// ===== TYPOGRAPHY =====
+$n-fontFamily-primary: 'Inter', system-ui, sans-serif;
+$n-fontFamily-serif: 'Fraunces', serif;
+$n-fontFamily-mono: 'IBM Plex Mono', monospace;
+$n-fontSize-xxs: 0.625rem;
+$n-fontSize-xs: 0.6875rem;
+$n-fontSize-sm: 0.8125rem;
+$n-fontSize-md: 0.875rem;
+$n-fontSize-lg: 1rem;
+$n-fontSize-xl: 1.25rem;
+$n-fontSize-xxl: 1.5rem;
+$n-fontSize-xxxl: 2rem;
+$n-fontWeight-regular: 400;
+$n-fontWeight-medium: 500;
+$n-fontWeight-semibold: 600;
+$n-fontWeight-bold: 700;
+$n-lineHeight-tight: 1.1;
+$n-lineHeight-heading: 1.25;
+$n-lineHeight-form: 1.4;
+$n-lineHeight-default: 1.5;
+$n-lineHeight-caption: 1.6;
+
+// ===== SPACING & SIZING =====
+$n-space-0: 0px;
+$n-space-1: 4px;
+$n-space-2: 8px;
+$n-space-3: 12px;
+$n-space-4: 16px;
+$n-space-5: 20px;
+$n-space-6: 24px;
+$n-space-8: 32px;
+$n-space-10: 40px;
+$n-space-12: 48px;
+$n-space-16: 64px;
+$n-space-20: 80px;
+$n-iconSize-xxs: 12px;
+$n-iconSize-xs: 14px;
+$n-iconSize-sm: 16px;
+$n-iconSize-md: 20px;
+$n-iconSize-lg: 24px;
+$n-iconSize-xl: 32px;
+$n-iconSize-xxl: 40px;
+$n-componentSize-topbar-height: 56px;
+$n-componentSize-sidebar-width: 260px;
+$n-componentSize-input-sm: 32px;
+$n-componentSize-input-md: 40px;
+$n-componentSize-input-lg: 48px;
+
+// ===== BORDER & RADIUS =====
+$n-border-radius-sharp: 0px;
+$n-border-radius-sm: 10px;
+$n-border-radius-md: 14px;
+$n-border-radius-lg: 20px;
+$n-border-radius-xl: 26px;
+$n-border-radius-circle: 50%;
+$n-border-radius-pill: 9999px;
+$n-border-width-thin: 1px;
+$n-border-width-medium: 2px;
+$n-border-width-thick: 3px;
+
+// ===== SHADOWS =====
+$n-shadow-default: 0 1px 2px rgba(17, 19, 34, 0.04);
+$n-shadow-card: 0 1px 2px rgba(17, 19, 34, 0.04), 0 14px 30px -12px rgba(17, 19, 34, 0.10);
+$n-shadow-header: 0 2px 8px rgba(17, 19, 34, 0.06);
+$n-shadow-nav: 0 4px 12px rgba(17, 19, 34, 0.08);
+$n-shadow-popout: 0 16px 40px -8px rgba(17, 19, 34, 0.22);
+$n-shadow-modal: 0 24px 48px -12px rgba(17, 19, 34, 0.25);
+$n-shadow-glow: 0 20px 50px -14px rgba(11, 91, 142, 0.35);
+
+// ===== TRANSITIONS =====
+$n-transition-quickly: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+$n-transition-default: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+$n-transition-slowly: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+$n-transition-mobile: 250ms cubic-bezier(0.32, 0.72, 0, 1);
+
+// ===== Z-INDEX SCALE =====
+$n-z-index-deep: -1;
+$n-z-index-base: 0;
+$n-z-index-dropdown: 20;
+$n-z-index-sticky: 40;
+$n-z-index-overlay: 60;
+$n-z-index-modal: 80;
+$n-z-index-toast: 100;

@@ -1,0 +1,22 @@
+{
+  "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:@typescript-eslint/recommended"],
+  "parser": "@typescript-eslint/parser",
+  "plugins": ["react", "@typescript-eslint"],
+  "rules": {
+    "no-restricted-syntax": [
+      "warn",
+      {
+        "selector": "Literal[value=/^#([0-9a-fA-F]{3}){1,2}$/]",
+        "message": "Do not use hardcoded hex colors. Use CSS variables from tokens.css."
+      },
+      {
+        "selector": "Literal[value=/rgba?\\(/]",
+        "message": "Do not use hardcoded rgb/rgba colors. Use CSS variables from tokens.css."
+      },
+      {
+        "selector": "Literal[value=/(bg|text|border|fill|stroke)-(red|blue|green|yellow|purple|gray|indigo|pink|orange|teal)-[0-9]{2,3}/]",
+        "message": "Do not use Tailwind palette utilities directly. Use semantic classes mapping to tokens (e.g. bg-surface, text-danger)."
+      }
+    ]
+  }
+}

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Urvos Clinical OS — Design System Index</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+body{padding:60px 24px;}
+.wrap{max-width:840px;margin:0 auto;}
+.mark{width:40px;height:40px;border-radius:12px;background:var(--grad-brand);margin-bottom:20px;}
+h1{font-family:var(--font-serif);font-size:32px;margin-bottom:8px;}
+.sub{color:var(--text-2);font-size:14px;margin-bottom:40px;max-width:560px;line-height:1.6;}
+.vol{display:flex;gap:16px;align-items:flex-start;padding:18px 0;border-bottom:1px solid var(--border);text-decoration:none;color:inherit;}
+.vol:hover .n{color:var(--brand-solid);}
+.num{font-family:var(--font-data);font-size:12px;color:var(--text-3);width:26px;flex-shrink:0;padding-top:2px;}
+.n{font-weight:700;font-size:14.5px;transition:color .15s;}
+.d{font-size:12.5px;color:var(--text-2);margin-top:3px;}
+.foot{margin-top:36px;font-size:12px;color:var(--text-3);line-height:1.7;}
+.foot a{color:var(--brand-solid);font-weight:700;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="mark"></div>
+  <h1>Urvos Clinical OS</h1>
+  <div class="sub">A continuous ECG pulse line as the throughline, color reserved for clinical meaning, violet→blue brand identity. Eight volumes, one token system.</div>
+
+  <a class="vol" href="01-dashboard.html"><div class="num">01</div><div><div class="n">Dashboard</div><div class="d">Sidebar, bento grid, Live Vitals hero, patient context card</div></div></a>
+  <a class="vol" href="02-component-library.html"><div class="num">02</div><div><div class="n">Component Library</div><div class="d">Full taxonomy — Action, Input, Table, Overlay, Layout, all clinical modules, AI Copilot, Kanban, Gantt, Analytics</div></div></a>
+  <a class="vol" href="03-layout-notifications-email.html"><div class="num">03</div><div><div class="n">Layout, Mega Menu, Notifications & Email</div><div class="d">Container/padding scale, module switcher, notification panel, transactional email templates</div></div></a>
+  <a class="vol" href="04-tables-filters-search.html"><div class="num">04</div><div><div class="n">Tables, Filters & Search</div><div class="d">Search, saved views, row actions, 5 empty-state variants</div></div></a>
+  <a class="vol" href="05-lab-triage-pharmacy-provider-rcm-insurance.html"><div class="num">05</div><div><div class="n">Lab, Triage, Pharmacy, Provider, RCM & Insurance</div><div class="d">The operational and financial layer</div></div></a>
+  <a class="vol" href="06-crud-typography-color.html"><div class="num">06</div><div><div class="n">CRUD Patterns, Typography & Color</div><div class="d">Standardized create/read/update/delete, full type ramp, full color system + contrast notes</div></div></a>
+  <a class="vol" href="07-auth-admin-scheduling.html"><div class="num">07</div><div><div class="n">Auth, Onboarding, Admin & Scheduling</div><div class="d">Login/MFA, tenant setup, RBAC editor, full calendar with conflict detection</div></div></a>
+  <a class="vol" href="08-documents-messaging-portal-errors-print.html"><div class="num">08</div><div><div class="n">Documents, Messaging, Patient Portal, Errors & Print</div><div class="d">Upload/preview, secure messaging, patient-facing portal, app-level errors, print templates</div></div></a>
+  <a class="vol" href="09-nursing-prescriptions-patients-reports.html"><div class="num">09</div><div><div class="n">Nursing, Prescriptions, Patients & Reports</div><div class="d">MAR, SBAR shift handoff, vitals flowsheet, ePrescription, physical Rx, patient registration/profile, formatted lab report</div></div></a>
+
+  <div class="foot">
+    Production layer: <a href="tokens.css">tokens.css</a> · <a href="globals.css">globals.css</a> · <a href="tailwind.config.ts">tailwind.config.ts</a> · <a href="components/index.ts">/components</a><br>
+    Read first: <a href="README.md">README.md</a> · <a href="ACCESSIBILITY.md">ACCESSIBILITY.md</a> · <a href="CATALOG.md">CATALOG.md</a>
+  </div>
+</div>
+</body>
+</html>

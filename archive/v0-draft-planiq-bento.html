@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Urvos — Clinical SaaS Design System</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  /* ===== SURFACE ===== */
+  --bg:#F4F6FB;
+  --surface:#FFFFFF;
+  --surface-soft:#F8F9FD;
+  --border:#EAECF4;
+  --text-1:#12141F;
+  --text-2:#5B5F72;
+  --text-3:#9498A8;
+
+  /* ===== BRAND GRADIENT — Cyan → Indigo ===== */
+  --brand-a:#06B6C6;
+  --brand-b:#5B4FF0;
+  --grad-brand:linear-gradient(135deg,var(--brand-a),var(--brand-b));
+  --brand-solid:#4A3FE0;
+  --brand-tint:#EFEDFD;
+
+  /* ===== PASTEL ICON-TILE PALETTE (SaaS-kit signature) ===== */
+  --tile-violet-bg:#EFEBFE; --tile-violet-fg:#7C5CFC;
+  --tile-cyan-bg:#E3F8FA;   --tile-cyan-fg:#0DA9BB;
+  --tile-amber-bg:#FEF3E2;  --tile-amber-fg:#E08A1E;
+  --tile-rose-bg:#FDECEF;   --tile-rose-fg:#E0426B;
+  --tile-green-bg:#E8F8EE;  --tile-green-fg:#1FA966;
+
+  /* ===== CLINICAL SIGNAL — same meaning, softer SaaS expression ===== */
+  --sig-critical:#E0426B; --sig-critical-tint:#FDECEF;
+  --sig-caution:#E08A1E;  --sig-caution-tint:#FEF3E2;
+  --sig-success:#1FA966;  --sig-success-tint:#E8F8EE;
+  --sig-info:#3B82F6;     --sig-info-tint:#EAF1FE;
+
+  --font-ui:'Inter',system-ui,sans-serif;
+  --font-display:'Plus Jakarta Sans',var(--font-ui);
+  --font-data:'IBM Plex Mono',monospace;
+
+  --r-sm:10px; --r-md:14px; --r-lg:20px; --r-xl:26px;
+  --shadow-card:0 1px 2px rgba(18,20,31,0.04), 0 12px 28px -8px rgba(18,20,31,0.08);
+  --shadow-pop:0 12px 32px -6px rgba(18,20,31,0.18);
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--bg);color:var(--text-1);font-family:var(--font-ui);font-size:14px;-webkit-font-smoothing:antialiased;}
+h1,h2,h3,h4{font-family:var(--font-display);margin:0;letter-spacing:-0.015em;}
+.mono{font-family:var(--font-data);font-variant-numeric:tabular-nums;}
+a{text-decoration:none;color:inherit;}
+
+/* ===================== APP SHELL ===================== */
+.app{display:grid;grid-template-columns:236px 1fr;min-height:100vh;}
+.sidebar{background:var(--surface);border-right:1px solid var(--border);padding:20px 16px;position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:4px;}
+.brand{display:flex;align-items:center;gap:10px;padding:8px 8px 20px;}
+.brand .mark{width:32px;height:32px;border-radius:10px;background:var(--grad-brand);flex-shrink:0;}
+.brand b{font-family:var(--font-display);font-size:15.5px;font-weight:700;}
+.brand span{display:block;font-size:11px;color:var(--text-3);}
+.nav-group{font-size:10.5px;text-transform:uppercase;letter-spacing:0.07em;color:var(--text-3);font-weight:700;padding:14px 10px 6px;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--r-sm);font-size:13.5px;font-weight:600;color:var(--text-2);cursor:pointer;}
+.nav-item .ic{width:18px;height:18px;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:11px;background:var(--surface-soft);flex-shrink:0;}
+.nav-item.active{background:var(--brand-tint);color:var(--brand-solid);}
+.nav-item.active .ic{background:var(--grad-brand);color:#fff;}
+.nav-item:hover:not(.active){background:var(--surface-soft);}
+.sidebar-foot{margin-top:auto;padding:12px 10px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.avatar{width:32px;height:32px;border-radius:50%;background:var(--grad-brand);flex-shrink:0;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:12px;}
+
+.main{min-width:0;}
+.topbar{position:sticky;top:0;z-index:30;background:rgba(244,246,251,0.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:14px 32px;display:flex;align-items:center;gap:16px;}
+.searchbox{flex:1;max-width:360px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-sm);padding:9px 14px;font-size:13px;color:var(--text-3);display:flex;align-items:center;gap:8px;}
+.top-actions{margin-left:auto;display:flex;align-items:center;gap:12px;}
+.icon-btn{width:36px;height:36px;border-radius:var(--r-sm);background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:14px;position:relative;}
+.icon-btn .ping{position:absolute;top:6px;right:7px;width:7px;height:7px;border-radius:50%;background:var(--sig-critical);}
+
+.content{padding:28px 32px 80px;max-width:1320px;}
+.page-head{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:14px;}
+.page-head h1{font-size:26px;}
+.page-head p{color:var(--text-2);font-size:13.5px;margin-top:4px;}
+.btn{display:inline-flex;align-items:center;gap:7px;font-family:var(--font-ui);font-weight:700;font-size:13px;padding:10px 16px;border-radius:var(--r-sm);border:1px solid transparent;cursor:pointer;}
+.btn-primary{background:var(--grad-brand);color:#fff;box-shadow:0 8px 20px -6px rgba(91,79,240,0.45);}
+.btn-secondary{background:var(--surface);color:var(--text-1);border-color:var(--border);}
+.btn-ghost{background:transparent;color:var(--text-2);}
+.btn-danger{background:var(--sig-critical);color:#fff;}
+.btn-sm{padding:7px 12px;font-size:12px;}
+
+/* ===================== PATIENT CONTEXT CARD (signature, SaaS-flavored) ===================== */
+.patient-card{background:var(--grad-brand);border-radius:var(--r-xl);padding:22px 26px;color:#fff;display:flex;align-items:center;gap:22px;flex-wrap:wrap;position:relative;overflow:hidden;margin-bottom:24px;}
+.patient-card::after{content:'';position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,0.10);}
+.patient-card::before{content:'';position:absolute;right:60px;bottom:-90px;width:160px;height:160px;border-radius:50%;background:rgba(255,255,255,0.08);}
+.p-avatar{width:52px;height:52px;border-radius:16px;background:rgba(255,255,255,0.18);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;flex-shrink:0;z-index:1;}
+.p-id{z-index:1;}
+.p-id .name{font-family:var(--font-display);font-weight:700;font-size:17px;}
+.p-id .meta{font-size:12px;opacity:0.85;margin-top:2px;}
+.p-flags{display:flex;gap:8px;flex-wrap:wrap;z-index:1;}
+.p-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;font-size:11.5px;font-weight:700;background:rgba(255,255,255,0.16);}
+.p-badge.crit{background:rgba(255,255,255,0.92);color:var(--sig-critical);}
+.p-actions{margin-left:auto;display:flex;gap:8px;z-index:1;}
+.p-actions .btn-secondary{background:rgba(255,255,255,0.16);color:#fff;border-color:transparent;}
+.p-actions .btn-primary{background:#fff;color:var(--brand-solid);box-shadow:none;}
+
+/* ===================== BENTO DASHBOARD ===================== */
+.bento{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-bottom:28px;}
+.bento .span-2{grid-column:span 2;}
+.bento .span-4{grid-column:span 4;}
+@media (max-width:1100px){.bento{grid-template-columns:repeat(2,1fr);}.bento .span-4{grid-column:span 2;}}
+
+.card{background:var(--surface);border-radius:var(--r-lg);border:1px solid var(--border);box-shadow:var(--shadow-card);padding:20px;}
+.stat-tile .ic-tile{width:38px;height:38px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:17px;margin-bottom:14px;}
+.stat-tile .label{font-size:12px;color:var(--text-2);font-weight:600;}
+.stat-tile .value{font-family:var(--font-display);font-size:26px;font-weight:700;margin-top:4px;}
+.stat-tile .delta{font-size:11.5px;font-weight:700;margin-top:6px;display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;}
+.delta.up{background:var(--sig-success-tint);color:var(--sig-success);}
+.delta.down{background:var(--sig-critical-tint);color:var(--sig-critical);}
+
+.card-title-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.card-title-row h3{font-size:14.5px;}
+.card-title-row .more{font-size:12px;color:var(--brand-solid);font-weight:700;}
+
+.queue-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);}
+.queue-row:last-child{border:none;}
+.queue-av{width:34px;height:34px;border-radius:10px;background:var(--tile-cyan-bg);color:var(--tile-cyan-fg);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex-shrink:0;}
+.queue-name{font-weight:600;font-size:13px;}
+.queue-sub{font-size:11.5px;color:var(--text-3);}
+.queue-time{margin-left:auto;font-size:11.5px;color:var(--text-2);font-weight:600;}
+
+.ai-card{background:linear-gradient(160deg,#171233,#2A1F5E);color:#fff;border-radius:var(--r-lg);padding:20px;position:relative;overflow:hidden;}
+.ai-card::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 85% 0%, rgba(91,79,240,0.5), transparent 55%);}
+.ai-card .tag{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,0.12);padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;margin-bottom:12px;position:relative;}
+.ai-card p{font-size:13px;color:#D8D6F5;position:relative;line-height:1.5;}
+.ai-card .btn{margin-top:14px;position:relative;background:#fff;color:#171233;box-shadow:none;}
+
+/* Donut + area chart */
+.donut-wrap{display:flex;align-items:center;gap:18px;}
+.legend{display:flex;flex-direction:column;gap:8px;font-size:12px;}
+.legend .row{display:flex;align-items:center;gap:8px;}
+.legend .sw{width:8px;height:8px;border-radius:2px;}
+
+/* ===================== TOKEN / COMPONENT GALLERY ===================== */
+.section{padding-top:44px;}
+.section-head{margin-bottom:20px;}
+.section-tag{font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--brand-solid);font-weight:700;}
+.section-head h2{font-size:21px;margin-top:6px;}
+.section-head p{color:var(--text-2);font-size:13px;margin-top:6px;max-width:620px;}
+
+.swatch{border-radius:var(--r-md);overflow:hidden;border:1px solid var(--border);}
+.swatch-color{height:60px;}
+.swatch-label{padding:9px 12px;background:var(--surface);}
+.swatch-label .name{font-weight:700;font-size:12px;}
+.swatch-label .hex{color:var(--text-3);font-size:11px;font-family:var(--font-data);}
+
+label.fl{display:block;font-size:12px;font-weight:700;color:var(--text-2);margin-bottom:6px;}
+.input{width:100%;padding:10px 13px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-size:13px;background:var(--surface-soft);color:var(--text-1);}
+.input:focus{outline:none;border-color:var(--brand-solid);background:#fff;}
+.input.error{border-color:var(--sig-critical);background:var(--sig-critical-tint);}
+.fe{color:var(--sig-critical);font-size:11.5px;margin-top:6px;font-weight:600;}
+.fh{color:var(--text-3);font-size:11.5px;margin-top:6px;}
+
+.typeahead{position:relative;}
+.ta-results{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);box-shadow:var(--shadow-pop);z-index:10;overflow:hidden;}
+.ta-row{padding:10px 13px;font-size:12.5px;display:flex;justify-content:space-between;}
+.ta-row:hover{background:var(--surface-soft);}
+.ta-row .code{color:var(--text-3);font-family:var(--font-data);font-size:11px;}
+
+.switch{position:relative;width:38px;height:22px;border-radius:20px;background:var(--border);cursor:pointer;}
+.switch.on{background:var(--grad-brand);}
+.switch .knob{position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;transition:left .15s;box-shadow:0 1px 3px rgba(0,0,0,0.2);}
+.switch.on .knob{left:18px;}
+
+.badge{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;font-size:11.5px;font-weight:700;}
+.badge.critical{background:var(--sig-critical-tint);color:var(--sig-critical);}
+.badge.caution{background:var(--sig-caution-tint);color:var(--sig-caution);}
+.badge.success{background:var(--sig-success-tint);color:var(--sig-success);}
+.badge.info{background:var(--sig-info-tint);color:var(--sig-info);}
+.badge.ai{background:var(--brand-tint);color:var(--brand-solid);}
+.badge .dot{width:6px;height:6px;border-radius:50%;background:currentColor;}
+
+.tip-wrap{position:relative;display:inline-block;}
+.tip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#171233;color:#fff;font-size:11.5px;padding:8px 11px;border-radius:var(--r-sm);white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .12s;box-shadow:var(--shadow-pop);}
+.tip-wrap:hover .tip{opacity:1;}
+
+.timeline{position:relative;padding-left:26px;}
+.timeline::before{content:'';position:absolute;left:5px;top:4px;bottom:4px;width:2px;background:var(--border);}
+.tl-item{position:relative;padding-bottom:20px;}
+.tl-item::before{content:'';position:absolute;left:-25px;top:3px;width:11px;height:11px;border-radius:50%;background:var(--grad-brand);border:2px solid var(--surface);}
+.tl-item.crit::before{background:var(--sig-critical);}
+.tl-date{font-size:11px;color:var(--text-3);font-family:var(--font-data);}
+.tl-title{font-weight:700;font-size:13.5px;margin-top:2px;}
+.tl-desc{color:var(--text-2);font-size:12.5px;margin-top:2px;}
+
+table.datatable{width:100%;border-collapse:collapse;font-size:12.5px;}
+table.datatable th{text-align:left;padding:10px 13px;font-size:10.5px;text-transform:uppercase;letter-spacing:0.05em;color:var(--text-3);border-bottom:2px solid var(--border);font-weight:700;}
+table.datatable td{padding:11px 13px;border-bottom:1px solid var(--border);}
+table.datatable td.num{font-family:var(--font-data);text-align:right;}
+.trend{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px;}
+.trend.up{color:var(--sig-critical);background:var(--sig-critical-tint);}
+.trend.down{color:var(--sig-success);background:var(--sig-success-tint);}
+tr.row-crit td{background:var(--sig-critical-tint);}
+
+.rx-row{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr auto;gap:14px;align-items:end;}
+@media (max-width:900px){.rx-row{grid-template-columns:1fr 1fr;}}
+
+.soap-tabs{display:flex;gap:3px;background:var(--surface-soft);padding:4px;border-radius:var(--r-sm);width:fit-content;margin-bottom:14px;}
+.soap-tab{padding:7px 16px;font-size:12px;font-weight:700;border-radius:8px;cursor:pointer;color:var(--text-2);}
+.soap-tab.active{background:#fff;color:var(--brand-solid);box-shadow:0 2px 6px rgba(0,0,0,0.06);}
+.soap-editor{border:1.5px solid var(--border);border-radius:var(--r-md);padding:14px;min-height:100px;font-size:13px;color:var(--text-2);background:var(--surface-soft);}
+.voice-pill{display:inline-flex;align-items:center;gap:6px;background:var(--brand-tint);color:var(--brand-solid);font-size:11.5px;font-weight:700;padding:5px 12px;border-radius:20px;}
+.voice-pill .bar{width:2px;background:var(--brand-solid);border-radius:1px;animation:pulse 1s infinite ease-in-out;}
+@keyframes pulse{0%,100%{height:5px;}50%{height:13px;}}
+
+.demo-frame{background:var(--surface-soft);border-radius:var(--r-lg);padding:32px;display:flex;align-items:center;justify-content:center;min-height:220px;position:relative;overflow:hidden;}
+.modal{background:#fff;border-radius:var(--r-lg);box-shadow:var(--shadow-pop);max-width:340px;padding:24px;}
+.modal-icon{width:38px;height:38px;border-radius:12px;background:var(--sig-critical-tint);color:var(--sig-critical);display:flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:14px;}
+.modal h4{font-size:15px;margin-bottom:6px;}
+.modal p{color:var(--text-2);font-size:12.5px;margin:0 0 16px;}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end;}
+
+.toast{position:absolute;bottom:16px;right:16px;background:#171233;color:#fff;padding:12px 16px;border-radius:var(--r-sm);font-size:12.5px;display:flex;align-items:center;gap:9px;box-shadow:var(--shadow-pop);}
+.toast .dot{width:7px;height:7px;border-radius:50%;background:var(--sig-success);}
+
+.lockscreen{background:linear-gradient(160deg,#171233,#2A1F5E);color:#fff;border-radius:var(--r-lg);width:100%;padding:48px 24px;text-align:center;}
+.lockscreen .icon{width:46px;height:46px;border-radius:50%;background:rgba(255,255,255,0.12);margin:0 auto 14px;display:flex;align-items:center;justify-content:center;font-size:18px;}
+.lockscreen h4{font-size:16px;margin-bottom:6px;}
+.lockscreen p{color:#B9B4E0;font-size:12.5px;margin-bottom:16px;}
+
+.role-strip{display:flex;gap:8px;flex-wrap:wrap;}
+.role-chip{padding:8px 16px;border-radius:20px;font-size:12px;font-weight:700;border:1.5px solid var(--border);color:var(--text-2);background:var(--surface);}
+.role-chip.active{background:var(--grad-brand);color:#fff;border-color:transparent;}
+
+.gap-list{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+@media (max-width:900px){.gap-list{grid-template-columns:1fr;}}
+.gap-item{display:flex;gap:12px;padding:16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);}
+.gap-num{font-family:var(--font-data);font-size:11px;color:var(--brand-solid);font-weight:700;flex-shrink:0;padding-top:2px;}
+.gap-item h5{font-size:13px;margin:0 0 3px;}
+.gap-item p{margin:0;color:var(--text-2);font-size:12px;}
+
+footer{padding:40px 32px;color:var(--text-3);font-size:12px;text-align:center;}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="sidebar">
+    <div class="brand"><div class="mark"></div><div><b>Urvos</b><span>Clinical OS</span></div></div>
+    <div class="nav-group">Workspace</div>
+    <div class="nav-item active"><span class="ic">◧</span>Dashboard</div>
+    <div class="nav-item"><span class="ic">🗂</span>Patients</div>
+    <div class="nav-item"><span class="ic">📅</span>Schedule</div>
+    <div class="nav-item"><span class="ic">💊</span>Prescriptions</div>
+    <div class="nav-item"><span class="ic">🧪</span>Lab Orders</div>
+    <div class="nav-group">Insights</div>
+    <div class="nav-item"><span class="ic">✦</span>AI Copilot</div>
+    <div class="nav-item"><span class="ic">📊</span>Reports</div>
+    <div class="sidebar-foot"><div class="avatar">AN</div><div><div style="font-weight:700;font-size:12.5px;">Dr. A. Nair</div><div style="font-size:11px;color:var(--text-3);">Physician</div></div></div>
+  </div>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="searchbox">🔍 Search patients, orders, codes…</div>
+      <div class="top-actions">
+        <div class="icon-btn">🔔<span class="ping"></span></div>
+        <div class="icon-btn">⚙</div>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <div class="page-head">
+        <div><h1>Good morning, Dr. Nair</h1><p>You have 12 patients on today's schedule — 2 need review before noon.</p></div>
+        <button class="btn btn-primary">+ New encounter</button>
+      </div>
+
+      <div class="patient-card">
+        <div class="p-avatar">MS</div>
+        <div class="p-id"><div class="name">Meera Shah <span style="opacity:0.8;font-weight:500;">· F, 41</span></div><div class="meta">MRN 8827-441-09 · Dr. A. Nair (Primary) · Room 4B</div></div>
+        <div class="p-flags">
+          <span class="p-badge crit">⚠ Penicillin allergy</span>
+          <span class="p-badge">Fasting</span>
+          <span class="p-badge">Fall risk</span>
+        </div>
+        <div class="p-actions"><button class="btn btn-secondary btn-sm">Print summary</button><button class="btn btn-primary btn-sm">Sign encounter</button></div>
+      </div>
+
+      <!-- ============ BENTO DASHBOARD ============ -->
+      <div class="bento">
+        <div class="card stat-tile"><div class="ic-tile" style="background:var(--tile-cyan-bg);color:var(--tile-cyan-fg);">🩺</div><div class="label">Patients today</div><div class="value">12</div><div class="delta up">▲ 3 more than usual</div></div>
+        <div class="card stat-tile"><div class="ic-tile" style="background:var(--tile-rose-bg);color:var(--tile-rose-fg);">⚠</div><div class="label">Critical lab alerts</div><div class="value">2</div><div class="delta down">Needs review</div></div>
+        <div class="card stat-tile"><div class="ic-tile" style="background:var(--tile-amber-bg);color:var(--tile-amber-fg);">💊</div><div class="label">Pending Rx approvals</div><div class="value">5</div><div class="delta up">▲ 1 since 9am</div></div>
+        <div class="card stat-tile"><div class="ic-tile" style="background:var(--tile-green-bg);color:var(--tile-green-fg);">✅</div><div class="label">Charts signed</div><div class="value">8<span style="font-size:15px;color:var(--text-3);">/12</span></div><div class="delta up">On track</div></div>
+
+        <div class="card span-2">
+          <div class="card-title-row"><h3>Ward census — 7 day trend</h3><span class="more">View report →</span></div>
+          <svg viewBox="0 0 400 140" width="100%" height="140">
+            <defs><linearGradient id="areaFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#5B4FF0" stop-opacity="0.35"/><stop offset="100%" stop-color="#5B4FF0" stop-opacity="0"/></linearGradient></defs>
+            <polyline points="0,90 60,70 120,85 180,50 240,60 300,30 360,45 400,25" fill="none" stroke="#5B4FF0" stroke-width="3" stroke-linecap="round"/>
+            <polygon points="0,90 60,70 120,85 180,50 240,60 300,30 360,45 400,25 400,140 0,140" fill="url(#areaFill)"/>
+          </svg>
+        </div>
+
+        <div class="card span-2">
+          <div class="card-title-row"><h3>Department load</h3><span class="more">Details →</span></div>
+          <div class="donut-wrap">
+            <svg width="110" height="110" viewBox="0 0 42 42">
+              <circle r="15.9" cx="21" cy="21" fill="transparent" stroke="#EAECF4" stroke-width="6"></circle>
+              <circle r="15.9" cx="21" cy="21" fill="transparent" stroke="#5B4FF0" stroke-width="6" stroke-dasharray="38 62" stroke-dashoffset="25"></circle>
+              <circle r="15.9" cx="21" cy="21" fill="transparent" stroke="#0DA9BB" stroke-width="6" stroke-dasharray="24 76" stroke-dashoffset="-13"></circle>
+              <circle r="15.9" cx="21" cy="21" fill="transparent" stroke="#E08A1E" stroke-width="6" stroke-dasharray="18 82" stroke-dashoffset="-37"></circle>
+            </svg>
+            <div class="legend">
+              <div class="row"><span class="sw" style="background:#5B4FF0;"></span>General Medicine — 38%</div>
+              <div class="row"><span class="sw" style="background:#0DA9BB;"></span>Cardiology — 24%</div>
+              <div class="row"><span class="sw" style="background:#E08A1E;"></span>Orthopedics — 18%</div>
+              <div class="row"><span class="sw" style="background:#EAECF4;"></span>Other — 20%</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card span-2">
+          <div class="card-title-row"><h3>Next in queue</h3><span class="more">Full schedule →</span></div>
+          <div class="queue-row"><div class="queue-av">MS</div><div><div class="queue-name">Meera Shah</div><div class="queue-sub">Follow-up · HbA1c review</div></div><div class="queue-time">10:00 AM</div></div>
+          <div class="queue-row"><div class="queue-av" style="background:var(--tile-rose-bg);color:var(--tile-rose-fg);">RK</div><div><div class="queue-name">Rohit Kumar</div><div class="queue-sub">New patient · Chest tightness</div></div><div class="queue-time">10:30 AM</div></div>
+          <div class="queue-row"><div class="queue-av" style="background:var(--tile-amber-bg);color:var(--tile-amber-fg);">PP</div><div><div class="queue-name">Priya Patel</div><div class="queue-sub">Post-op check</div></div><div class="queue-time">11:15 AM</div></div>
+        </div>
+
+        <div class="ai-card span-2">
+          <span class="tag">✦ AI Copilot</span>
+          <h3 style="font-size:16px;position:relative;margin-bottom:8px;">3 charts have unsigned lab reviews</h3>
+          <p>Meera Shah's potassium result is critical-high and hasn't been acknowledged in 40 minutes. Want me to draft the follow-up note?</p>
+          <button class="btn">Review now</button>
+        </div>
+      </div>
+
+      <!-- ============ FOUNDATIONS ============ -->
+      <section class="section" id="foundations">
+        <div class="section-head"><div class="section-tag">01 · Foundations</div><h2>Design tokens</h2><p>A vibrant cyan→indigo brand gradient carries the "modern SaaS" feel; pastel icon tiles categorize information the way PlanIQ-style dashboards do. Clinical signal colors stay a fixed, separate palette so they're never confused with brand decoration.</p></div>
+
+        <div class="gap-list" style="margin-bottom:20px;grid-template-columns:repeat(4,1fr);">
+          <div class="swatch"><div class="swatch-color" style="background:var(--grad-brand);"></div><div class="swatch-label"><div class="name">Brand gradient</div><div class="hex">#06B6C6 → #5B4FF0</div></div></div>
+          <div class="swatch"><div class="swatch-color" style="background:#171233;"></div><div class="swatch-label"><div class="name">Ink (AI surfaces)</div><div class="hex">#171233</div></div></div>
+          <div class="swatch"><div class="swatch-color" style="background:#F4F6FB;border-bottom:1px solid #eee;"></div><div class="swatch-label"><div class="name">bg</div><div class="hex">#F4F6FB</div></div></div>
+          <div class="swatch"><div class="swatch-color" style="background:#5B5F72;"></div><div class="swatch-label"><div class="name">text-secondary</div><div class="hex">#5B5F72</div></div></div>
+        </div>
+        <div class="gap-list" style="margin-bottom:28px;grid-template-columns:repeat(5,1fr);">
+          <div class="swatch"><div class="swatch-color" style="background:#E0426B;"></div><div class="swatch-label"><div class="name">critical</div><div class="hex">#E0426B</div></div></div>
+          <div class="swatch"><div class="swatch-color" style="background:#E08A1E;"></div><div class="swatch-label"><div class="name">caution</div><div class="hex">#E08A1E</div></div></div>
+          <div class="swatch"><div class="swatch-color" style="background:#1FA966;"></div><div class="swatch-label"><div class="name">success</div><div class="hex">#1FA966</div></div></div>
+          <div class="swatch"><div class="swatch-color" style="background:#3B82F6;"></div><div class="swatch-label"><div class="name">info</div><div class="hex">#3B82F6</div></div></div>
+          <div class="swatch"><div class="swatch-color" style="background:#7C5CFC;"></div><div class="swatch-label"><div class="name">AI accent</div><div class="hex">#7C5CFC</div></div></div>
+        </div>
+
+        <div class="gap-list">
+          <div class="card">
+            <div class="card-title-row"><h3>Type scale</h3></div>
+            <div style="font-family:'Plus Jakarta Sans';font-size:28px;font-weight:700;margin-bottom:10px;">Lab Results</div>
+            <div style="font-family:'Plus Jakarta Sans';font-size:17px;font-weight:600;margin-bottom:10px;">Medication Reconciliation</div>
+            <div style="font-size:14px;margin-bottom:10px;">Patient reports intermittent chest tightness on exertion.</div>
+            <div class="mono" style="font-size:13px;color:var(--text-2);">HR 88 · BP 132/84 · SpO₂ 97%</div>
+          </div>
+          <div class="card">
+            <div class="card-title-row"><h3>Radius &amp; elevation</h3></div>
+            <p style="font-size:12.5px;color:var(--text-2);margin:0 0 14px;">Bigger radius (14–26px) and soft, generous shadows — the SaaS-kit signature — replace the flat hairline cards of a typical clinical tool.</p>
+            <div style="display:flex;gap:12px;">
+              <div style="width:44px;height:44px;background:var(--brand-tint);border-radius:var(--r-sm);"></div>
+              <div style="width:44px;height:44px;background:var(--brand-tint);border-radius:var(--r-md);"></div>
+              <div style="width:44px;height:44px;background:var(--brand-tint);border-radius:var(--r-lg);box-shadow:var(--shadow-card);"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ COMPONENTS ============ -->
+      <section class="section" id="components">
+        <div class="section-head"><div class="section-tag">02 · Core Components</div><h2>Building blocks</h2><p>Same controls a modern SaaS kit ships — softened corners, gradient focus states, pastel pill badges — tuned for clinical inputs.</p></div>
+        <div class="bento" style="grid-template-columns:repeat(3,1fr);">
+          <div class="card">
+            <div class="card-title-row"><h3>Input field</h3></div>
+            <label class="fl">Dosage (mg)</label>
+            <input class="input error" value="850">
+            <div class="fe">⚠ Exceeds standard max (500mg)</div>
+          </div>
+          <div class="card">
+            <div class="card-title-row"><h3>Type-ahead (ICD-10)</h3></div>
+            <label class="fl">Diagnosis code</label>
+            <div class="typeahead">
+              <input class="input" value="Type 2 diab" readonly>
+              <div class="ta-results">
+                <div class="ta-row"><span>Type 2 diabetes, w/o complications</span><span class="code">E11.9</span></div>
+                <div class="ta-row"><span>Type 2 diabetes w/ retinopathy</span><span class="code">E11.31</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title-row"><h3>Toggles</h3></div>
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><div class="switch on" onclick="this.classList.toggle('on')"><div class="knob"></div></div><span style="font-size:13px;">Notify care team on result</span></div>
+            <div style="display:flex;align-items:center;gap:10px;"><div class="switch" onclick="this.classList.toggle('on')"><div class="knob"></div></div><span style="font-size:13px;">Auto-refill enabled</span></div>
+          </div>
+          <div class="card">
+            <div class="card-title-row"><h3>Badges</h3></div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+              <span class="badge critical"><span class="dot"></span>Penicillin allergy</span>
+              <span class="badge caution"><span class="dot"></span>Fall risk</span>
+              <span class="badge success"><span class="dot"></span>Stable</span>
+              <span class="badge info"><span class="dot"></span>Lab pending</span>
+              <span class="badge ai"><span class="dot"></span>AI drafted</span>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title-row"><h3>Buttons</h3></div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+              <button class="btn btn-primary btn-sm">Sign chart</button>
+              <button class="btn btn-secondary btn-sm">Print</button>
+              <button class="btn btn-danger btn-sm">Discontinue</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title-row"><h3>Tooltip</h3></div>
+            <div class="tip-wrap"><span style="border-bottom:1.5px dotted var(--text-3);font-weight:700;cursor:help;">NPO</span><div class="tip">Nil per os — nothing by mouth</div></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ ORGANISMS ============ -->
+      <section class="section" id="organisms">
+        <div class="section-head"><div class="section-tag">03 · EMR Organisms</div><h2>Complex clinical patterns</h2></div>
+        <div class="gap-list" style="margin-bottom:18px;">
+          <div class="card">
+            <div class="card-title-row"><h3>Clinical timeline</h3></div>
+            <div class="timeline">
+              <div class="tl-item crit"><div class="tl-date">10 Jul 2026 · 09:12</div><div class="tl-title">Anaphylactic reaction flagged</div><div class="tl-desc">Reaction to amoxicillin during infusion</div></div>
+              <div class="tl-item"><div class="tl-date">03 Jul 2026</div><div class="tl-title">Follow-up · Dr. Nair</div><div class="tl-desc">Adjusted metformin dosage</div></div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-title-row"><h3>Prescription builder</h3></div>
+            <div class="rx-row">
+              <div><label class="fl">Drug</label><input class="input" value="Amoxicillin 500mg"></div>
+              <div><label class="fl">Dose</label><input class="input mono" value="500mg"></div>
+              <div><label class="fl">Freq</label><input class="input" value="TID"></div>
+              <div><label class="fl">Days</label><input class="input" value="7"></div>
+            </div>
+            <div class="fe" style="margin-top:10px;">⚠ Contraindicated — documented penicillin allergy</div>
+          </div>
+        </div>
+        <div class="card" style="margin-bottom:18px;">
+          <div class="card-title-row"><h3>Lab flowsheet</h3></div>
+          <table class="datatable">
+            <thead><tr><th>Test</th><th>13 Jun</th><th>27 Jun</th><th>10 Jul</th><th>Trend</th></tr></thead>
+            <tbody>
+              <tr><td>HbA1c (%)</td><td class="num">7.8</td><td class="num">7.4</td><td class="num">7.1</td><td><span class="trend down">▼ improving</span></td></tr>
+              <tr class="row-crit"><td>Potassium (mmol/L)</td><td class="num">4.1</td><td class="num">4.3</td><td class="num">6.2</td><td><span class="trend up">▲ critical</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card">
+          <div class="card-title-row"><h3>SOAP charting module</h3></div>
+          <div class="soap-tabs"><div class="soap-tab active">Subjective</div><div class="soap-tab">Objective</div><div class="soap-tab">Assessment</div><div class="soap-tab">Plan</div></div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:8px;"><span style="font-size:11.5px;color:var(--text-3);">Patient-reported symptoms</span><span class="voice-pill">🎙 Listening <span class="bar"></span><span class="bar" style="animation-delay:.2s;"></span><span class="bar" style="animation-delay:.4s;"></span></span></div>
+          <div class="soap-editor">Patient reports mild intermittent chest tightness on exertion, resolving with rest.</div>
+        </div>
+      </section>
+
+      <!-- ============ SAFETY ============ -->
+      <section class="section" id="safety">
+        <div class="section-head"><div class="section-tag">04 · Feedback &amp; Safety</div><h2>Where error has real consequences</h2></div>
+        <div class="gap-list">
+          <div class="demo-frame"><div class="modal"><div class="modal-icon">!</div><h4>Allergy conflict detected</h4><p>Amoxicillin conflicts with a documented penicillin allergy.</p><div class="modal-actions"><button class="btn btn-ghost btn-sm">Cancel</button><button class="btn btn-danger btn-sm">Override</button></div></div></div>
+          <div class="demo-frame"><div class="toast"><span class="dot"></span>Lab results routed to Dr. Nair</div></div>
+          <div class="card"><label class="fl">Warfarin dose (mg)</label><input class="input error" value="25"><div class="fe">⚠ 5× typical maintenance dose</div></div>
+          <div class="demo-frame" style="padding:0;"><div class="lockscreen"><div class="icon">🔒</div><h4>Session locked — idle 5 min</h4><p>PHI hidden for HIPAA / ABDM compliance.</p><button class="btn btn-primary btn-sm">Unlock with PIN</button></div></div>
+        </div>
+      </section>
+
+      <!-- ============ ROLES ============ -->
+      <section class="section" id="roles">
+        <div class="section-head"><div class="section-tag">05 · Role-Aware Surfaces</div><h2>Same system, seven roles</h2></div>
+        <div class="role-strip">
+          <div class="role-chip active">Physician</div><div class="role-chip">Nurse</div><div class="role-chip">Pharmacist</div>
+          <div class="role-chip">Lab Technician</div><div class="role-chip">Front Desk</div><div class="role-chip">Billing</div><div class="role-chip">Facility Admin</div>
+        </div>
+      </section>
+
+      <!-- ============ GAPS ============ -->
+      <section class="section" id="gaps">
+        <div class="section-head"><div class="section-tag">06 · Likely Gaps</div><h2>What the brief doesn't mention yet</h2></div>
+        <div class="gap-list">
+          <div class="gap-item"><div class="gap-num">01</div><div><h5>Offline / unsynced states</h5><p>An explicit "unsynced" indicator distinct from a normal saved state.</p></div></div>
+          <div class="gap-item"><div class="gap-num">02</div><div><h5>Consent &amp; e-signature capture</h5><p>ABDM consent artefacts need their own pattern, with audit trail.</p></div></div>
+          <div class="gap-item"><div class="gap-num">03</div><div><h5>Skeleton states for FHIR calls</h5><p>Medplum/CARE round-trips need loading skeletons, not blank flashes.</p></div></div>
+          <div class="gap-item"><div class="gap-num">04</div><div><h5>Empty states</h5><p>"No allergies recorded" must read differently from "still loading."</p></div></div>
+          <div class="gap-item"><div class="gap-num">05</div><div><h5>Print / PDF stylesheet</h5><p>Sidebar, gradient chrome, and cards should never print.</p></div></div>
+          <div class="gap-item"><div class="gap-num">06</div><div><h5>Gloved-touch density mode</h5><p>Bedside tablet use needs larger hit areas than desktop.</p></div></div>
+          <div class="gap-item"><div class="gap-num">07</div><div><h5>Barcode / QR scan feedback</h5><p>Medication administration (5 Rights) needs a dedicated confirm state.</p></div></div>
+          <div class="gap-item"><div class="gap-num">08</div><div><h5>Audit trail affordance</h5><p>Inline "who changed this" on any edited clinical value.</p></div></div>
+          <div class="gap-item"><div class="gap-num">09</div><div><h5>Multilingual / Indian formats</h5><p>Hindi/regional language, DD-MM-YYYY, ₹ as first-class, not a locale afterthought.</p></div></div>
+          <div class="gap-item"><div class="gap-num">10</div><div><h5>Real dark mode</h5><p>A true night-shift variant, not an automatic invert of these tokens.</p></div></div>
+          <div class="gap-item"><div class="gap-num">11</div><div><h5>Keyboard-first workflows</h5><p>Documented shortcuts and focus order for high-volume charting.</p></div></div>
+          <div class="gap-item"><div class="gap-num">12</div><div><h5>Tenant-brandable tokens</h5><p>Split fixed system tokens (signal colors) from tenant tokens (logo, one accent) for multitenancy.</p></div></div>
+        </div>
+      </section>
+
+    </div>
+    <footer>Urvos Clinical OS — modern SaaS visual language, clinical-grade signal system underneath.</footer>
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('.soap-tab').forEach(t=>t.addEventListener('click',()=>{document.querySelectorAll('.soap-tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');}));
+document.querySelectorAll('.role-chip').forEach(t=>t.addEventListener('click',()=>{document.querySelectorAll('.role-chip').forEach(x=>x.classList.remove('active'));t.classList.add('active');}));
+document.querySelectorAll('.nav-item').forEach(t=>t.addEventListener('click',()=>{document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));t.classList.add('active');}));
+</script>
+</body>
+</html>

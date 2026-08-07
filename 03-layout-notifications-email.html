@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Urvos — Layout, Mega Menu, Notifications & Email</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+*{box-sizing:border-box;}
+body{margin:0;background:var(--bg);color:var(--text-1);font-family:var(--font-ui);font-size:13.5px;-webkit-font-smoothing:antialiased;}
+h1,h2,h3,h4{margin:0;letter-spacing:-0.01em;}
+.serif{font-family:var(--font-serif);font-weight:600;}
+.mono{font-family:var(--font-data);font-variant-numeric:tabular-nums;}
+a{text-decoration:none;color:inherit;}
+.icon{width:16px;height:16px;stroke:currentColor;stroke-width:1.75;fill:none;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
+
+.shell{max-width:1320px;margin:0 auto;padding:0 32px 100px;}
+.topband{background:var(--ink);color:#fff;padding:34px 32px;}
+.topband .inner{max-width:1320px;margin:0 auto;}
+.topband .eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;color:var(--pulse);background:rgba(25,227,154,0.12);padding:5px 11px;border-radius:20px;margin-bottom:12px;}
+.topband h1{font-family:var(--font-serif);font-size:26px;font-weight:600;}
+.topband p{color:#B9B4E0;font-size:13px;margin-top:8px;max-width:640px;line-height:1.55;}
+
+.catnav{position:sticky;top:0;z-index:40;background:rgba(244,245,250,0.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:12px 32px;display:flex;gap:16px;overflow-x:auto;white-space:nowrap;}
+.catnav a{font-size:12px;font-weight:600;color:var(--text-2);padding:5px 10px;border-radius:20px;}
+.catnav a:hover{background:var(--brand-tint);color:var(--brand-solid);}
+
+.cat{padding:44px 0 8px;border-top:1px solid var(--border);}
+.cat:first-of-type{border-top:none;}
+.cat-head{margin-bottom:20px;}
+.cat-tag{font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--brand-solid);font-weight:700;}
+.cat-head h2{font-family:var(--font-serif);font-size:22px;margin-top:6px;font-weight:600;}
+.cat-head p{color:var(--text-2);font-size:12.5px;margin-top:6px;max-width:640px;}
+
+.comp{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:16px;box-shadow:var(--shadow-card);}
+.comp-label{font-size:10px;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-3);font-weight:700;margin-bottom:12px;}
+
+/* ============ CONTAINERS & PADDING ============ */
+.ruler{position:relative;background:repeating-linear-gradient(90deg,var(--brand-tint) 0 4px,transparent 4px 8px);height:6px;border-radius:3px;margin-bottom:8px;}
+.container-row{display:flex;align-items:center;gap:14px;margin-bottom:12px;}
+.container-bar{height:26px;border-radius:6px;background:var(--grad-brand);opacity:0.85;display:flex;align-items:center;padding-left:10px;color:#fff;font-size:10.5px;font-weight:700;}
+.container-name{width:80px;flex-shrink:0;font-size:11.5px;font-weight:700;}
+.container-px{width:70px;flex-shrink:0;font-family:var(--font-data);font-size:11px;color:var(--text-3);text-align:right;}
+
+.nest-demo{background:var(--ink);border-radius:var(--r-md);padding:32px;}
+.nest-l1{background:rgba(255,255,255,0.06);border:1px dashed rgba(255,255,255,0.25);border-radius:12px;padding:24px;position:relative;}
+.nest-l2{background:rgba(255,255,255,0.08);border:1px dashed rgba(255,255,255,0.3);border-radius:10px;padding:16px;position:relative;}
+.nest-l3{background:#fff;border-radius:8px;padding:10px 12px;color:var(--text-1);font-size:12px;font-weight:600;position:relative;}
+.nest-tag{position:absolute;top:-9px;left:12px;background:var(--pulse);color:#0D0B1F;font-size:9px;font-weight:800;padding:2px 7px;border-radius:8px;}
+
+.bp-table{width:100%;border-collapse:collapse;font-size:12px;}
+.bp-table th{text-align:left;padding:8px 10px;font-size:10px;text-transform:uppercase;color:var(--text-3);border-bottom:2px solid var(--border);font-weight:700;}
+.bp-table td{padding:9px 10px;border-bottom:1px solid var(--border);}
+
+/* ============ MEGA MENU ============ */
+.mm-trigger{display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);padding:9px 14px;border-radius:var(--r-sm);font-weight:700;font-size:12.5px;color:var(--text-1);}
+.megamenu{background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--shadow-pop);padding:22px;display:grid;grid-template-columns:1fr 1fr 1fr 220px;gap:26px;margin-top:10px;}
+.mm-col-title{font-size:10px;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-3);font-weight:700;margin-bottom:12px;}
+.mm-item{display:flex;gap:10px;padding:8px 6px;border-radius:var(--r-sm);}
+.mm-item:hover{background:var(--surface-soft);}
+.mm-ic{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.mm-item .t{font-weight:700;font-size:12.5px;}
+.mm-item .d{font-size:10.5px;color:var(--text-3);margin-top:1px;}
+.mm-rail{background:var(--surface-soft);border-radius:var(--r-md);padding:14px;}
+.mm-rail .rt{font-size:10px;text-transform:uppercase;color:var(--text-3);font-weight:700;margin-bottom:10px;}
+.mm-recent{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:12px;font-weight:600;}
+.mm-av{width:24px;height:24px;border-radius:8px;background:var(--grad-brand);color:#fff;display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:700;}
+.mm-cta{margin-top:12px;background:linear-gradient(160deg,#171233,#2A1F5E);border-radius:var(--r-sm);padding:12px;color:#fff;}
+.mm-cta .tag{font-size:9.5px;font-weight:700;color:var(--pulse);}
+.mm-cta p{font-size:11px;color:#D3CEEF;margin:5px 0 8px;}
+
+/* ============ NOTIFICATIONS ============ */
+.bell-wrap{display:flex;align-items:center;gap:20px;}
+.icon-btn{width:38px;height:38px;border-radius:var(--r-sm);background:var(--surface);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;position:relative;color:var(--text-2);}
+.count-badge{position:absolute;top:-5px;right:-5px;background:var(--sig-critical);color:#fff;font-size:9.5px;font-weight:800;min-width:16px;height:16px;border-radius:20px;display:flex;align-items:center;justify-content:center;padding:0 4px;border:2px solid var(--bg);}
+
+.notif-panel{background:#fff;border:1px solid var(--border);border-radius:var(--r-lg);box-shadow:var(--shadow-pop);width:360px;overflow:hidden;}
+.notif-head{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid var(--border);}
+.notif-head h4{font-size:13.5px;}
+.notif-head .mk{font-size:11px;color:var(--brand-solid);font-weight:700;cursor:pointer;}
+.notif-group{font-size:10px;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-3);font-weight:700;padding:10px 16px 4px;}
+.notif-row{display:flex;gap:10px;padding:10px 16px;border-bottom:1px solid var(--border);position:relative;}
+.notif-row:last-child{border:none;}
+.notif-row .bar{width:3px;border-radius:3px;position:absolute;left:0;top:8px;bottom:8px;}
+.notif-ic{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.notif-body{flex:1;}
+.notif-title{font-size:12.5px;font-weight:700;}
+.notif-desc{font-size:11.5px;color:var(--text-2);margin-top:1px;}
+.notif-time{font-size:10.5px;color:var(--text-3);margin-top:3px;}
+.unread-dot{width:7px;height:7px;border-radius:50%;background:var(--brand-solid);flex-shrink:0;margin-top:4px;}
+.notif-foot{padding:10px 16px;text-align:center;font-size:11.5px;font-weight:700;color:var(--brand-solid);border-top:1px solid var(--border);}
+
+.pref-table{width:100%;border-collapse:collapse;font-size:12px;}
+.pref-table th{text-align:left;padding:8px 10px;font-size:10px;text-transform:uppercase;color:var(--text-3);font-weight:700;border-bottom:2px solid var(--border);}
+.pref-table th:not(:first-child){text-align:center;}
+.pref-table td{padding:9px 10px;border-bottom:1px solid var(--border);}
+.pref-table td:not(:first-child){text-align:center;}
+.mini-switch{position:relative;width:30px;height:17px;border-radius:20px;background:var(--border);display:inline-block;}
+.mini-switch.on{background:var(--grad-brand);}
+.mini-switch .k{position:absolute;top:2px;left:2px;width:13px;height:13px;border-radius:50%;background:#fff;}
+.mini-switch.on .k{left:15px;}
+
+/* ============ EMAIL ============ */
+.email-frame{background:#E9EBF2;border-radius:var(--r-md);padding:24px;}
+.email-chrome{background:#fff;border-radius:8px 8px 0 0;padding:10px 14px;border-bottom:1px solid var(--border);font-size:11px;color:var(--text-3);}
+.email-chrome b{color:var(--text-1);}
+.email-body{background:#fff;max-width:440px;margin:0 auto;border-radius:0 0 8px 8px;overflow:hidden;font-family:var(--font-ui);}
+.email-header{background:var(--grad-brand);padding:22px;text-align:center;color:#fff;}
+.email-header.urgent{background:linear-gradient(120deg,#DE3F68,#B8244A);}
+.email-header .mark{width:30px;height:30px;border-radius:9px;background:rgba(255,255,255,0.2);margin:0 auto 8px;display:flex;align-items:center;justify-content:center;}
+.email-header b{font-size:13px;letter-spacing:0.02em;}
+.email-content{padding:26px 24px;}
+.email-content h3{font-family:var(--font-serif);font-size:18px;margin-bottom:10px;}
+.email-content p{font-size:12.5px;color:var(--text-2);line-height:1.6;margin:0 0 16px;}
+.email-cta{display:inline-block;background:var(--grad-brand);color:#fff;font-weight:700;font-size:12.5px;padding:11px 22px;border-radius:8px;}
+.email-cta.urgent{background:var(--sig-critical);}
+.email-detail-box{background:var(--surface-soft);border-radius:8px;padding:12px 14px;font-size:12px;margin-bottom:16px;}
+.email-detail-box div{display:flex;justify-content:space-between;padding:3px 0;}
+.email-footer{background:var(--surface-soft);padding:16px 24px;font-size:10.5px;color:var(--text-3);text-align:center;line-height:1.6;}
+
+.email-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+@media (max-width:900px){.email-grid{grid-template-columns:1fr;}}
+
+footer{padding:44px 32px;color:var(--text-3);font-size:12px;text-align:center;}
+</style>
+</head>
+<body>
+
+<div class="topband">
+  <div class="inner">
+    <div class="eyebrow">✦ Volume 3 — System plumbing</div>
+    <h1>Layout, mega menu, notifications & email</h1>
+    <p>The parts that make a design system actually shippable rather than just a component catalogue. Same tokens throughout: violet→blue brand, mint reserved for live states, signal colors fixed.</p>
+  </div>
+</div>
+
+<div class="catnav">
+  <a href="#containers">Containers & Padding</a><a href="#megamenu">Mega Menu</a><a href="#notifications">Notifications</a><a href="#email">Email</a>
+</div>
+
+<div class="shell">
+
+  <!-- ============ CONTAINERS & PADDING ============ -->
+  <section class="cat" id="containers">
+    <div class="cat-head"><div class="cat-tag">Containers & Padding</div><h2>Width scale, spacing rules, nesting</h2><p>Four container widths cover every surface in the product. Padding always steps down as you nest — outer surfaces breathe, inner surfaces stay tight.</p></div>
+
+    <div class="comp" style="margin-bottom:16px;">
+      <div class="comp-label">Container width scale</div>
+      <div class="container-row"><div class="container-name">sm</div><div class="container-bar" style="width:30%;">Modals, drawers, email body</div><div class="container-px">520px</div></div>
+      <div class="container-row"><div class="container-name">md</div><div class="container-bar" style="width:48%;">Forms, side panels, single-column charts</div><div class="container-px">760px</div></div>
+      <div class="container-row"><div class="container-name">lg</div><div class="container-bar" style="width:74%;">Dashboard content, patient chart</div><div class="container-px">1180px</div></div>
+      <div class="container-row"><div class="container-name">xl</div><div class="container-bar" style="width:100%;">Component library, wide data tables</div><div class="container-px">1360px</div></div>
+    </div>
+
+    <div class="comp" style="margin-bottom:16px;">
+      <div class="comp-label">Padding scale (4pt base) mapped to surface type</div>
+      <table class="bp-table">
+        <thead><tr><th>Surface</th><th>Padding</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>Page content</td><td class="mono">32px</td><td>Outer shell only, never repeated inward</td></tr>
+          <tr><td>Card</td><td class="mono">20px</td><td>Default for stat tiles, list cards</td></tr>
+          <tr><td>Modal</td><td class="mono">24px</td><td>Slightly more generous — interruptive, needs breathing room</td></tr>
+          <tr><td>Drawer</td><td class="mono">20px</td><td>Matches card padding for visual consistency</td></tr>
+          <tr><td>Compact row (table cell, list item)</td><td class="mono">8–12px</td><td>Dense data contexts only</td></tr>
+          <tr><td>Gloved-touch row</td><td class="mono">16px</td><td>Bedside tablet density mode</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="comp" style="margin-bottom:16px;">
+      <div class="comp-label">Nesting — padding steps down at every level</div>
+      <div class="nest-demo">
+        <div class="nest-l1"><span class="nest-tag">Page · 32px</span>
+          <div class="nest-l2" style="margin-top:6px;"><span class="nest-tag" style="background:var(--brand-1);color:#fff;">Card · 20px</span>
+            <div class="nest-l3" style="margin-top:6px;"><span class="nest-tag" style="background:#fff;color:var(--text-1);">Row · 10px</span>Metformin 500mg — BID</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="comp">
+      <div class="comp-label">Responsive breakpoints</div>
+      <table class="bp-table">
+        <thead><tr><th>Name</th><th>Range</th><th>Behavior</th></tr></thead>
+        <tbody>
+          <tr><td>Bedside tablet</td><td class="mono">&lt;768px</td><td>Sidebar collapses to icon rail; density switches to comfortable</td></tr>
+          <tr><td>Desktop</td><td class="mono">768–1180px</td><td>Bento grid drops to 2 columns</td></tr>
+          <tr><td>Wide desktop</td><td class="mono">&gt;1180px</td><td>Full 4-column bento, sidebar expanded</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- ============ MEGA MENU ============ -->
+  <section class="cat" id="megamenu">
+    <div class="cat-head"><div class="cat-tag">Mega Menu</div><h2>Module switcher</h2><p>Triggered from the top nav. Groups every module by workflow stage rather than a flat list, with recent patients and the AI Copilot surfaced in a side rail so the menu earns its size.</p></div>
+    <div class="mm-trigger">⊞ Switch module ▾</div>
+    <div class="megamenu">
+      <div>
+        <div class="mm-col-title">Clinical</div>
+        <div class="mm-item"><div class="mm-ic" style="background:var(--tile-blue-bg);color:var(--tile-blue-fg);">🗂</div><div><div class="t">Patients</div><div class="d">Roster, charts, demographics</div></div></div>
+        <div class="mm-item"><div class="mm-ic" style="background:var(--tile-amber-bg);color:var(--tile-amber-fg);">💊</div><div><div class="t">Prescriptions</div><div class="d">Active meds, eRx, refills</div></div></div>
+        <div class="mm-item"><div class="mm-ic" style="background:var(--tile-rose-bg);color:var(--tile-rose-fg);">🧪</div><div><div class="t">Lab Orders</div><div class="d">Results, flowsheets, critical values</div></div></div>
+      </div>
+      <div>
+        <div class="mm-col-title">Operations</div>
+        <div class="mm-item"><div class="mm-ic" style="background:var(--tile-violet-bg);color:var(--tile-violet-fg);">📅</div><div><div class="t">Schedule</div><div class="d">Appointments, room assignment</div></div></div>
+        <div class="mm-item"><div class="mm-ic" style="background:var(--tile-mint-bg);color:var(--tile-mint-fg);">🛏</div><div><div class="t">Patient Flow</div><div class="d">Kanban board, triage queue</div></div></div>
+        <div class="mm-item"><div class="mm-ic" style="background:var(--tile-blue-bg);color:var(--tile-blue-fg);">💳</div><div><div class="t">Billing</div><div class="d">Claims, invoices, insurance</div></div></div>
+      </div>
+      <div>
+        <div class="mm-col-title">Insights</div>
+        <div class="mm-item"><div class="mm-ic" style="background:var(--tile-amber-bg);color:var(--tile-amber-fg);">📊</div><div><div class="t">Reports</div><div class="d">Throughput, capacity, outcomes</div></div></div>
+        <div class="mm-item"><div class="mm-ic" style="background:var(--brand-tint);color:var(--brand-solid);">✦</div><div><div class="t">AI Copilot</div><div class="d">Chart review, anomaly detection</div></div></div>
+        <div class="mm-item"><div class="mm-ic" style="background:var(--tile-rose-bg);color:var(--tile-rose-fg);">⚙</div><div><div class="t">Admin</div><div class="d">Roles, tenants, audit log</div></div></div>
+      </div>
+      <div class="mm-rail">
+        <div class="rt">Recent patients</div>
+        <div class="mm-recent"><div class="mm-av">MS</div>Meera Shah</div>
+        <div class="mm-recent"><div class="mm-av">RK</div>Rohit Kumar</div>
+        <div class="mm-recent"><div class="mm-av">PP</div>Priya Patel</div>
+        <div class="mm-cta"><div class="tag">✦ AI COPILOT</div><p>3 charts have unsigned lab reviews.</p><button class="btn" style="background:#fff;color:#171233;border:none;padding:7px 12px;border-radius:8px;font-size:11px;font-weight:700;">Review now</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ NOTIFICATIONS ============ -->
+  <section class="cat" id="notifications">
+    <div class="cat-head"><div class="cat-tag">Notifications</div><h2>Bell, panel, and preferences</h2><p>Left accent bar carries the same signal-color vocabulary as everywhere else — a critical notification is unmistakably different from a routine confirmation before you've read a word.</p></div>
+
+    <div class="bell-wrap" style="margin-bottom:20px;">
+      <div class="icon-btn"><svg class="icon"><use href="#i-bell"/></svg><span class="count-badge">3</span></div>
+      <span style="font-size:11.5px;color:var(--text-3);">Bell trigger — unread count badge</span>
+    </div>
+
+    <div class="notif-panel" style="margin-bottom:20px;">
+      <div class="notif-head"><h4>Notifications</h4><span class="mk">Mark all read</span></div>
+      <div class="notif-group">Today</div>
+      <div class="notif-row"><div class="bar" style="background:var(--sig-critical);"></div><div class="notif-ic" style="background:var(--sig-critical-tint);color:var(--sig-critical);"><svg class="icon" style="width:15px;height:15px;"><use href="#i-alert"/></svg></div><div class="notif-body"><div class="notif-title">Critical potassium result</div><div class="notif-desc">Meera Shah — 6.2 mmol/L, unacknowledged 40 min</div><div class="notif-time">10:12 AM</div></div><div class="unread-dot"></div></div>
+      <div class="notif-row"><div class="bar" style="background:var(--brand-solid);"></div><div class="notif-ic" style="background:var(--brand-tint);color:var(--brand-solid);">✦</div><div class="notif-body"><div class="notif-title">AI drafted a follow-up note</div><div class="notif-desc">Ready for your review on Meera Shah's chart</div><div class="notif-time">10:14 AM</div></div><div class="unread-dot"></div></div>
+      <div class="notif-row"><div class="bar" style="background:var(--sig-info);"></div><div class="notif-ic" style="background:var(--sig-info-tint);color:var(--sig-info);">📋</div><div class="notif-body"><div class="notif-title">Sepsis order set assigned</div><div class="notif-desc">Rohit Kumar — 2 tasks pending</div><div class="notif-time">10:30 AM</div></div><div class="unread-dot"></div></div>
+      <div class="notif-group">Earlier</div>
+      <div class="notif-row"><div class="bar" style="background:var(--sig-success);"></div><div class="notif-ic" style="background:var(--sig-success-tint);color:var(--sig-success);">✓</div><div class="notif-body"><div class="notif-title">Lab results routed</div><div class="notif-desc">CBC panel sent to Dr. Nair</div><div class="notif-time">Yesterday</div></div></div>
+      <div class="notif-foot">View all notifications</div>
+    </div>
+
+    <div class="comp">
+      <div class="comp-label">Notification preferences</div>
+      <table class="pref-table">
+        <thead><tr><th>Category</th><th>In-app</th><th>Email</th><th>SMS</th></tr></thead>
+        <tbody>
+          <tr><td>Critical alerts</td><td><span class="mini-switch on"><span class="k"></span></span></td><td><span class="mini-switch on"><span class="k"></span></span></td><td><span class="mini-switch on"><span class="k"></span></span></td></tr>
+          <tr><td>Task assignments</td><td><span class="mini-switch on"><span class="k"></span></span></td><td><span class="mini-switch"><span class="k"></span></span></td><td><span class="mini-switch"><span class="k"></span></span></td></tr>
+          <tr><td>AI insights</td><td><span class="mini-switch on"><span class="k"></span></span></td><td><span class="mini-switch"><span class="k"></span></span></td><td><span class="mini-switch"><span class="k"></span></span></td></tr>
+          <tr><td>Routine confirmations</td><td><span class="mini-switch on"><span class="k"></span></span></td><td><span class="mini-switch"><span class="k"></span></span></td><td><span class="mini-switch"><span class="k"></span></span></td></tr>
+        </tbody>
+      </table>
+      <div style="font-size:11px;color:var(--text-3);margin-top:10px;">Critical alerts can't be fully disabled — only the channel is configurable, in-app stays mandatory.</div>
+    </div>
+  </section>
+
+  <!-- ============ EMAIL ============ -->
+  <section class="cat" id="email">
+    <div class="cat-head"><div class="cat-tag">Email</div><h2>Transactional templates</h2><p>Visual previews here use the same brand tokens as the app. Production emails need a table-based build (MJML or hand-coded tables) since most email clients don't support flexbox/grid — treat these as the visual spec for that build, not the shippable markup.</p></div>
+
+    <div class="email-grid">
+      <div class="email-frame">
+        <div class="email-chrome">Subject: <b>Reminder — your appointment tomorrow at 10:00 AM</b></div>
+        <div class="email-body">
+          <div class="email-header"><div class="mark">🩺</div><b>URVOS</b></div>
+          <div class="email-content">
+            <h3>See you tomorrow, Meera</h3>
+            <p>This is a reminder for your follow-up appointment with Dr. A. Nair.</p>
+            <div class="email-detail-box"><div><span>Date</span><span>11 Jul 2026</span></div><div><span>Time</span><span>10:00 AM</span></div><div><span>Location</span><span>Room 4B, Apollo Hospitals</span></div></div>
+            <a class="email-cta">Confirm attendance</a>
+          </div>
+          <div class="email-footer">Apollo Hospitals · Managed on Urvos Clinical OS<br>Manage notification preferences · Unsubscribe</div>
+        </div>
+      </div>
+
+      <div class="email-frame">
+        <div class="email-chrome">Subject: <b style="color:var(--sig-critical);">⚠ Critical lab result — action required</b></div>
+        <div class="email-body">
+          <div class="email-header urgent"><div class="mark">⚠</div><b>URVOS · URGENT</b></div>
+          <div class="email-content">
+            <h3>Potassium result is critical-high</h3>
+            <p>Meera Shah's latest potassium level requires immediate physician review.</p>
+            <div class="email-detail-box"><div><span>Result</span><span style="color:var(--sig-critical);font-weight:700;">6.2 mmol/L</span></div><div><span>Reference range</span><span>3.5–5.1</span></div><div><span>Drawn</span><span>09:58 AM</span></div></div>
+            <a class="email-cta urgent">Review chart now</a>
+          </div>
+          <div class="email-footer">This alert cannot be unsubscribed from — critical results always notify the assigned physician.</div>
+        </div>
+      </div>
+
+      <div class="email-frame">
+        <div class="email-chrome">Subject: <b>Your prescription refill has been approved</b></div>
+        <div class="email-body">
+          <div class="email-header"><div class="mark">💊</div><b>URVOS</b></div>
+          <div class="email-content">
+            <h3>Refill approved</h3>
+            <p>Your Metformin 500mg refill has been approved and sent to your pharmacy.</p>
+            <div class="email-detail-box"><div><span>Pharmacy</span><span>Apollo — Satellite Rd</span></div><div><span>Supply</span><span>90 days</span></div><div><span>Ready by</span><span>Today, 5:00 PM</span></div></div>
+            <a class="email-cta">View prescription</a>
+          </div>
+          <div class="email-footer">Apollo Hospitals · Managed on Urvos Clinical OS</div>
+        </div>
+      </div>
+
+      <div class="email-frame">
+        <div class="email-chrome">Subject: <b>Reset your Urvos password</b></div>
+        <div class="email-body">
+          <div class="email-header"><div class="mark">🔒</div><b>URVOS</b></div>
+          <div class="email-content">
+            <h3>Password reset requested</h3>
+            <p>We received a request to reset your password. This link expires in 15 minutes and can only be used once.</p>
+            <a class="email-cta">Reset password</a>
+            <p style="margin-top:14px;font-size:11px;">Didn't request this? Contact your facility admin immediately — this may indicate unauthorized access.</p>
+          </div>
+          <div class="email-footer">For security, this email doesn't contain your password.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>Urvos — Layout, mega menu, notifications & email, Volume 3.</footer>
+
+<svg width="0" height="0" style="position:absolute;">
+<symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 5 2 6 2 6H4s2-1 2-6"/><path d="M10 20a2 2 0 0 0 4 0"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3l10 18H2L12 3z"/><line x1="12" y1="9.5" x2="12" y2="14"/><circle cx="12" cy="17" r="0.6" fill="currentColor"/></symbol>
+</svg>
+</body>
+</html>

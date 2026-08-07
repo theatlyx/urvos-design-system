@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Clinical OS — Design System</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* ===== NEUTRALS ===== */
+    --bg:#F5F6F8;
+    --surface:#FFFFFF;
+    --surface-sunken:#EDEFF3;
+    --border:#DEE2E8;
+    --border-strong:#C6CCD6;
+    --text-primary:#10151C;
+    --text-secondary:#4C5563;
+    --text-tertiary:#8A93A1;
+    --text-inverse:#F5F7FA;
+
+    /* ===== BRAND ===== */
+    --brand-harbor:#0E4B6B;      /* primary */
+    --brand-harbor-dark:#0A3850;
+    --brand-harbor-tint:#E6EEF3;
+    --brand-ion:#5B4FD6;         /* AI-assisted accent only */
+    --brand-ion-tint:#EEEBFB;
+
+    /* ===== CLINICAL SIGNALS (earned color) ===== */
+    --signal-critical:#C22A2A;
+    --signal-critical-tint:#FBEAEA;
+    --signal-caution:#A8580A;
+    --signal-caution-tint:#FBF0E3;
+    --signal-success:#157F4B;
+    --signal-success-tint:#E6F4ED;
+    --signal-info:#1868B7;
+    --signal-info-tint:#E8F1FB;
+    --signal-flag:#6650A4;
+    --signal-flag-tint:#EFEAF9;
+
+    /* ===== TYPE ===== */
+    --font-ui:'Inter',system-ui,sans-serif;
+    --font-display:'Space Grotesk',var(--font-ui);
+    --font-data:'IBM Plex Mono',ui-monospace,monospace;
+
+    /* ===== SPACING (4pt) ===== */
+    --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-6:24px; --sp-8:32px; --sp-12:48px; --sp-16:64px;
+
+    /* ===== RADIUS — deliberately restrained, not bubble-SaaS ===== */
+    --r-sm:4px; --r-md:6px; --r-lg:10px;
+
+    /* ===== ELEVATION — hairline first, shadow only for overlays ===== */
+    --shadow-overlay:0 8px 28px rgba(16,21,28,0.16);
+    --shadow-pop:0 4px 14px rgba(16,21,28,0.10);
+  }
+
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text-primary);font-family:var(--font-ui);font-size:14px;line-height:1.5;}
+  h1,h2,h3,h4{font-family:var(--font-display);margin:0;letter-spacing:-0.01em;}
+  code, .mono{font-family:var(--font-data);font-variant-numeric:tabular-nums;}
+  .tabnum{font-variant-numeric:tabular-nums;}
+
+  /* ---------- LAYOUT ---------- */
+  .shell{max-width:1180px;margin:0 auto;padding:0 var(--sp-6) var(--sp-16);}
+  .nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,0.92);backdrop-filter:blur(6px);border-bottom:1px solid var(--border);}
+  .nav-inner{max-width:1180px;margin:0 auto;padding:var(--sp-3) var(--sp-6);display:flex;align-items:center;gap:var(--sp-6);flex-wrap:wrap;}
+  .nav-brand{font-family:var(--font-display);font-weight:700;font-size:15px;color:var(--brand-harbor-dark);display:flex;align-items:center;gap:8px;}
+  .nav-brand .dot{width:8px;height:8px;border-radius:2px;background:var(--brand-harbor);}
+  .nav-links{display:flex;gap:var(--sp-4);flex-wrap:wrap;}
+  .nav-links a{font-size:12.5px;color:var(--text-secondary);text-decoration:none;font-weight:500;}
+  .nav-links a:hover{color:var(--brand-harbor);}
+
+  .hero{padding:var(--sp-12) 0 var(--sp-8);}
+  .hero-eyebrow{font-size:11.5px;text-transform:uppercase;letter-spacing:0.08em;color:var(--brand-harbor);font-weight:600;}
+  .hero h1{font-size:34px;margin-top:var(--sp-2);max-width:640px;}
+  .hero p{color:var(--text-secondary);max-width:600px;margin-top:var(--sp-3);font-size:15px;}
+
+  section.block{padding:var(--sp-12) 0;border-top:1px solid var(--border);}
+  .block-head{margin-bottom:var(--sp-6);}
+  .block-tag{font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-tertiary);font-weight:600;}
+  .block-head h2{font-size:22px;margin-top:6px;}
+  .block-head p{color:var(--text-secondary);max-width:640px;margin-top:var(--sp-2);font-size:13.5px;}
+
+  .grid{display:grid;gap:var(--sp-4);}
+  .grid-2{grid-template-columns:1fr 1fr;}
+  .grid-3{grid-template-columns:repeat(3,1fr);}
+  .grid-4{grid-template-columns:repeat(4,1fr);}
+  @media (max-width:900px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}}
+
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-lg);padding:var(--sp-4);}
+  .card-title{font-size:12px;font-weight:600;color:var(--text-tertiary);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:var(--sp-3);}
+
+  /* ---------- PATIENT CONTEXT BAR (signature organism) ---------- */
+  .patient-bar{position:sticky;top:53px;z-index:40;background:var(--brand-harbor-dark);color:var(--text-inverse);border-radius:0;}
+  .patient-bar-inner{max-width:1180px;margin:0 auto;padding:var(--sp-3) var(--sp-6);display:flex;align-items:center;gap:var(--sp-6);flex-wrap:wrap;}
+  .patient-id{display:flex;flex-direction:column;gap:2px;}
+  .patient-id .name{font-family:var(--font-display);font-weight:600;font-size:15px;}
+  .patient-id .meta{font-size:11.5px;color:#B9C6D2;}
+  .patient-flags{display:flex;gap:6px;flex-wrap:wrap;}
+  .pbadge{display:inline-flex;align-items:center;gap:5px;padding:3px 8px;border-radius:var(--r-sm);font-size:11px;font-weight:600;border:1px solid transparent;}
+  .pbadge.crit{background:rgba(194,42,42,0.22);color:#FFC2C2;border-color:rgba(255,140,140,0.35);}
+  .pbadge.flag{background:rgba(102,80,164,0.28);color:#D9CFF7;}
+  .patient-actions{margin-left:auto;display:flex;gap:8px;}
+
+  /* ---------- COLOR SWATCHES ---------- */
+  .swatch{border-radius:var(--r-lg);overflow:hidden;border:1px solid var(--border);}
+  .swatch-color{height:64px;}
+  .swatch-label{padding:var(--sp-2) var(--sp-3);background:var(--surface);}
+  .swatch-label .name{font-weight:600;font-size:12.5px;}
+  .swatch-label .hex{color:var(--text-tertiary);font-size:11px;font-family:var(--font-data);}
+
+  /* ---------- TYPE SCALE ---------- */
+  .type-row{display:flex;align-items:baseline;gap:var(--sp-6);padding:var(--sp-3) 0;border-bottom:1px solid var(--border);}
+  .type-row:last-child{border-bottom:none;}
+  .type-meta{width:170px;flex-shrink:0;font-size:11.5px;color:var(--text-tertiary);}
+  .type-meta b{display:block;color:var(--text-secondary);font-size:12.5px;}
+
+  /* ---------- BUTTONS ---------- */
+  .btn{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-ui);font-weight:600;font-size:13px;padding:9px 14px;border-radius:var(--r-md);border:1px solid transparent;cursor:pointer;}
+  .btn-primary{background:var(--brand-harbor);color:#fff;}
+  .btn-secondary{background:var(--surface);color:var(--text-primary);border-color:var(--border-strong);}
+  .btn-ghost{background:transparent;color:var(--text-secondary);}
+  .btn-danger{background:var(--signal-critical);color:#fff;}
+  .btn-ai{background:var(--brand-ion-tint);color:var(--brand-ion);border-color:#D8D2F5;}
+  .btn-sm{padding:6px 10px;font-size:12px;}
+
+  /* ---------- INPUTS ---------- */
+  label.field-label{display:block;font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:6px;}
+  .input, .select{width:100%;padding:9px 11px;border:1px solid var(--border-strong);border-radius:var(--r-md);font-family:var(--font-ui);font-size:13px;background:var(--surface);color:var(--text-primary);}
+  .input:focus, .select:focus{outline:2px solid var(--brand-harbor);outline-offset:1px;border-color:var(--brand-harbor);}
+  .input.error{border-color:var(--signal-critical);background:var(--signal-critical-tint);}
+  .field-error{color:var(--signal-critical);font-size:11.5px;margin-top:5px;font-weight:500;}
+  .field-hint{color:var(--text-tertiary);font-size:11.5px;margin-top:5px;}
+
+  .typeahead{position:relative;}
+  .ta-results{position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);box-shadow:var(--shadow-pop);z-index:10;max-height:180px;overflow:auto;}
+  .ta-row{padding:8px 11px;font-size:12.5px;cursor:pointer;display:flex;justify-content:space-between;}
+  .ta-row:hover{background:var(--surface-sunken);}
+  .ta-row .code{color:var(--text-tertiary);font-family:var(--font-data);font-size:11px;}
+
+  /* ---------- TOGGLES / CHECKS ---------- */
+  .check-row{display:flex;align-items:center;gap:8px;padding:6px 0;font-size:13px;}
+  .check-row input{width:16px;height:16px;accent-color:var(--brand-harbor);}
+  .switch{position:relative;width:36px;height:20px;border-radius:20px;background:var(--border-strong);cursor:pointer;flex-shrink:0;}
+  .switch.on{background:var(--brand-harbor);}
+  .switch .knob{position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .15s;}
+  .switch.on .knob{left:18px;}
+
+  /* ---------- BADGES ---------- */
+  .badge{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:var(--r-sm);font-size:11.5px;font-weight:600;}
+  .badge.critical{background:var(--signal-critical-tint);color:var(--signal-critical);}
+  .badge.caution{background:var(--signal-caution-tint);color:var(--signal-caution);}
+  .badge.success{background:var(--signal-success-tint);color:var(--signal-success);}
+  .badge.info{background:var(--signal-info-tint);color:var(--signal-info);}
+  .badge.flag{background:var(--signal-flag-tint);color:var(--signal-flag);}
+  .badge.neutral{background:var(--surface-sunken);color:var(--text-secondary);}
+  .badge .dot{width:6px;height:6px;border-radius:50%;background:currentColor;}
+
+  /* ---------- TOOLTIP ---------- */
+  .tip-wrap{position:relative;display:inline-block;}
+  .tip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--text-primary);color:#fff;font-size:11.5px;padding:7px 10px;border-radius:var(--r-md);white-space:nowrap;box-shadow:var(--shadow-pop);opacity:0;pointer-events:none;transition:opacity .12s;}
+  .tip-wrap:hover .tip{opacity:1;}
+
+  /* ---------- CLINICAL TIMELINE ---------- */
+  .timeline{position:relative;padding-left:var(--sp-6);}
+  .timeline::before{content:'';position:absolute;left:5px;top:4px;bottom:4px;width:2px;background:var(--border);}
+  .tl-item{position:relative;padding-bottom:var(--sp-6);}
+  .tl-item::before{content:'';position:absolute;left:-24px;top:3px;width:10px;height:10px;border-radius:50%;background:var(--brand-harbor);border:2px solid var(--surface);}
+  .tl-item.crit::before{background:var(--signal-critical);}
+  .tl-date{font-size:11px;color:var(--text-tertiary);font-family:var(--font-data);}
+  .tl-title{font-weight:600;font-size:13.5px;margin-top:2px;}
+  .tl-desc{color:var(--text-secondary);font-size:12.5px;margin-top:2px;}
+
+  /* ---------- DATA TABLE ---------- */
+  table.datatable{width:100%;border-collapse:collapse;font-size:12.5px;}
+  table.datatable th{position:sticky;top:0;background:var(--surface-sunken);text-align:left;padding:9px 11px;font-size:11px;text-transform:uppercase;letter-spacing:0.04em;color:var(--text-tertiary);border-bottom:1px solid var(--border);}
+  table.datatable td{padding:9px 11px;border-bottom:1px solid var(--border);}
+  table.datatable td.num{font-family:var(--font-data);text-align:right;}
+  .trend{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:600;}
+  .trend.up{color:var(--signal-critical);}
+  .trend.down{color:var(--signal-info);}
+  .trend.flat{color:var(--text-tertiary);}
+  tr.row-crit td{background:var(--signal-critical-tint);}
+
+  /* ---------- ANATOMY VISUALIZER (placeholder) ---------- */
+  .anatomy-box{display:flex;gap:var(--sp-6);align-items:center;}
+  .anatomy-svg{flex-shrink:0;}
+  .anatomy-point{fill:var(--signal-critical);cursor:pointer;}
+  .anatomy-list{flex:1;}
+  .anatomy-list .entry{display:flex;gap:8px;align-items:baseline;padding:6px 0;border-bottom:1px solid var(--border);font-size:12.5px;}
+  .anatomy-list .entry:last-child{border:none;}
+
+  /* ---------- eRx BUILDER ---------- */
+  .rx-row{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr auto;gap:var(--sp-3);align-items:end;}
+  @media (max-width:900px){.rx-row{grid-template-columns:1fr 1fr;}}
+
+  /* ---------- SOAP MODULE ---------- */
+  .soap-tabs{display:flex;gap:2px;background:var(--surface-sunken);padding:3px;border-radius:var(--r-md);width:fit-content;margin-bottom:var(--sp-3);}
+  .soap-tab{padding:6px 14px;font-size:12px;font-weight:600;border-radius:var(--r-sm);cursor:pointer;color:var(--text-secondary);}
+  .soap-tab.active{background:var(--surface);color:var(--brand-harbor);box-shadow:var(--shadow-pop);}
+  .soap-editor{border:1px solid var(--border);border-radius:var(--r-md);padding:var(--sp-3);min-height:110px;font-size:13px;color:var(--text-secondary);}
+  .voice-pill{display:inline-flex;align-items:center;gap:6px;background:var(--brand-ion-tint);color:var(--brand-ion);font-size:11.5px;font-weight:600;padding:4px 10px;border-radius:20px;}
+  .voice-pill .bar{width:2px;background:var(--brand-ion);border-radius:1px;animation:pulse 1s infinite ease-in-out;}
+  @keyframes pulse{0%,100%{height:4px;}50%{height:12px;}}
+
+  /* ---------- MODAL / TOAST / LOCK ---------- */
+  .demo-frame{background:var(--surface-sunken);border-radius:var(--r-lg);padding:var(--sp-8);display:flex;align-items:center;justify-content:center;min-height:220px;position:relative;overflow:hidden;}
+  .modal{background:var(--surface);border-radius:var(--r-lg);box-shadow:var(--shadow-overlay);max-width:360px;padding:var(--sp-6);}
+  .modal-icon{width:36px;height:36px;border-radius:var(--r-md);background:var(--signal-critical-tint);color:var(--signal-critical);display:flex;align-items:center;justify-content:center;font-weight:700;margin-bottom:var(--sp-3);}
+  .modal h4{font-size:15px;margin-bottom:6px;}
+  .modal p{color:var(--text-secondary);font-size:12.5px;margin:0 0 var(--sp-4);}
+  .modal-actions{display:flex;gap:8px;justify-content:flex-end;}
+
+  .toast{position:absolute;bottom:var(--sp-4);right:var(--sp-4);background:var(--text-primary);color:#fff;padding:11px 14px;border-radius:var(--r-md);font-size:12.5px;display:flex;align-items:center;gap:8px;box-shadow:var(--shadow-pop);}
+  .toast .dot{width:7px;height:7px;border-radius:50%;background:var(--signal-success);}
+
+  .lockscreen{background:var(--brand-harbor-dark);color:var(--text-inverse);border-radius:var(--r-lg);width:100%;padding:var(--sp-12) var(--sp-6);text-align:center;}
+  .lockscreen .icon{width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.1);margin:0 auto var(--sp-4);display:flex;align-items:center;justify-content:center;font-size:18px;}
+  .lockscreen h4{font-size:16px;margin-bottom:6px;}
+  .lockscreen p{color:#AEC1CE;font-size:12.5px;margin-bottom:var(--sp-4);}
+
+  /* ---------- ROLE STRIP ---------- */
+  .role-strip{display:flex;gap:8px;flex-wrap:wrap;}
+  .role-chip{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;border:1px solid var(--border-strong);color:var(--text-secondary);background:var(--surface);}
+  .role-chip.active{background:var(--brand-harbor);color:#fff;border-color:var(--brand-harbor);}
+
+  /* ---------- GAP CHECKLIST ---------- */
+  .gap-list{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-3);}
+  @media (max-width:900px){.gap-list{grid-template-columns:1fr;}}
+  .gap-item{display:flex;gap:10px;padding:var(--sp-3);background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);}
+  .gap-num{font-family:var(--font-data);font-size:11px;color:var(--brand-harbor);font-weight:600;flex-shrink:0;padding-top:2px;}
+  .gap-item h5{font-size:13px;margin:0 0 3px;}
+  .gap-item p{margin:0;color:var(--text-secondary);font-size:12px;}
+
+  footer{padding:var(--sp-8) 0;color:var(--text-tertiary);font-size:12px;text-align:center;}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="nav-inner">
+    <div class="nav-brand"><span class="dot"></span>Clinical OS — Design System</div>
+    <div class="nav-links">
+      <a href="#foundations">Foundations</a>
+      <a href="#components">Core Components</a>
+      <a href="#organisms">EMR Organisms</a>
+      <a href="#safety">Feedback &amp; Safety</a>
+      <a href="#roles">Roles</a>
+      <a href="#gaps">What's Missing</a>
+    </div>
+  </div>
+</div>
+
+<div class="patient-bar">
+  <div class="patient-bar-inner">
+    <div class="patient-id">
+      <div class="name">Meera Shah <span style="color:#9FB3C0;font-weight:400;">· F, 41</span></div>
+      <div class="meta">MRN 8827-441-09 · DOB 14 Mar 1985 · Dr. A. Nair (Primary)</div>
+    </div>
+    <div class="patient-flags">
+      <span class="pbadge crit">⚠ Penicillin allergy</span>
+      <span class="pbadge flag">Fasting</span>
+      <span class="pbadge flag">Fall risk</span>
+    </div>
+    <div class="patient-actions">
+      <button class="btn btn-sm" style="background:rgba(255,255,255,0.12);color:#fff;border-color:transparent;">Print summary</button>
+      <button class="btn btn-sm btn-primary">Sign encounter</button>
+    </div>
+  </div>
+</div>
+
+<div class="shell">
+
+  <div class="hero">
+    <div class="hero-eyebrow">A design system for Urvos</div>
+    <h1>Color is earned, not decorative.</h1>
+    <p>Everything below is monochrome by default. The only color that appears is color that means something clinically — a critical allergy, a caution flag, an AI-assisted suggestion. That restraint is what makes the signals trustworthy at a glance, across a 12-hour shift, on the smallest tablet at bedside.</p>
+  </div>
+
+  <!-- ============ FOUNDATIONS ============ -->
+  <section class="block" id="foundations">
+    <div class="block-head">
+      <div class="block-tag">01 · Foundations</div>
+      <h2>Design tokens</h2>
+      <p>The base neutral system is near-grayscale on purpose. Brand and clinical-signal colors sit on top, each with a single, non-overlapping job.</p>
+    </div>
+
+    <div class="card-title" style="margin-bottom:12px;">Neutrals</div>
+    <div class="grid grid-4" style="margin-bottom:28px;">
+      <div class="swatch"><div class="swatch-color" style="background:#F5F6F8;"></div><div class="swatch-label"><div class="name">bg</div><div class="hex">#F5F6F8</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#FFFFFF;border-bottom:1px solid #eee;"></div><div class="swatch-label"><div class="name">surface</div><div class="hex">#FFFFFF</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#10151C;"></div><div class="swatch-label"><div class="name">text-primary</div><div class="hex">#10151C</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#4C5563;"></div><div class="swatch-label"><div class="name">text-secondary</div><div class="hex">#4C5563</div></div></div>
+    </div>
+
+    <div class="card-title" style="margin-bottom:12px;">Brand</div>
+    <div class="grid grid-4" style="margin-bottom:28px;">
+      <div class="swatch"><div class="swatch-color" style="background:#0E4B6B;"></div><div class="swatch-label"><div class="name">harbor (primary)</div><div class="hex">#0E4B6B</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#0A3850;"></div><div class="swatch-label"><div class="name">harbor-dark</div><div class="hex">#0A3850</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#5B4FD6;"></div><div class="swatch-label"><div class="name">ion (AI-assisted only)</div><div class="hex">#5B4FD6</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#EEEBFB;"></div><div class="swatch-label"><div class="name">ion-tint</div><div class="hex">#EEEBFB</div></div></div>
+    </div>
+
+    <div class="card-title" style="margin-bottom:12px;">Clinical signals — reserved exclusively for clinical meaning, never decoration</div>
+    <div class="grid grid-4">
+      <div class="swatch"><div class="swatch-color" style="background:#C22A2A;"></div><div class="swatch-label"><div class="name">critical</div><div class="hex">#C22A2A</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#A8580A;"></div><div class="swatch-label"><div class="name">caution</div><div class="hex">#A8580A</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#157F4B;"></div><div class="swatch-label"><div class="name">success</div><div class="hex">#157F4B</div></div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#1868B7;"></div><div class="swatch-label"><div class="name">info</div><div class="hex">#1868B7</div></div></div>
+    </div>
+
+    <div class="grid grid-2" style="margin-top:28px;">
+      <div class="card">
+        <div class="card-title">Type scale</div>
+        <div class="type-row"><div class="type-meta"><b>Display / 32</b>Space Grotesk 600</div><div style="font-family:'Space Grotesk';font-size:32px;font-weight:600;">Lab Results</div></div>
+        <div class="type-row"><div class="type-meta"><b>H2 / 20</b>Space Grotesk 600</div><div style="font-family:'Space Grotesk';font-size:20px;font-weight:600;">Medication Reconciliation</div></div>
+        <div class="type-row"><div class="type-meta"><b>Body / 14</b>Inter 400</div><div style="font-size:14px;">Patient reports intermittent chest tightness on exertion.</div></div>
+        <div class="type-row"><div class="type-meta"><b>Data / 13</b>IBM Plex Mono, tabular</div><div class="mono" style="font-size:13px;">HR 88 · BP 132/84 · SpO₂ 97%</div></div>
+        <div class="type-row"><div class="type-meta"><b>Label / 11</b>Inter 600, uppercase</div><div style="font-size:11px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:var(--text-tertiary);">Last updated 2 min ago</div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Spacing, radius, elevation</div>
+        <p style="font-size:12.5px;color:var(--text-secondary);margin:0 0 12px;">4pt base grid (4 / 8 / 12 / 16 / 24 / 32 / 48 / 64). Radius is deliberately restrained — 4–10px, never pill-shaped cards — to read as instrument-panel software, not a marketing dashboard.</p>
+        <div style="display:flex;gap:10px;align-items:flex-end;margin-bottom:16px;">
+          <div style="width:32px;height:32px;background:var(--brand-harbor-tint);border-radius:var(--r-sm);"></div>
+          <div style="width:32px;height:32px;background:var(--brand-harbor-tint);border-radius:var(--r-md);"></div>
+          <div style="width:32px;height:32px;background:var(--brand-harbor-tint);border-radius:var(--r-lg);"></div>
+          <span style="font-size:11px;color:var(--text-tertiary);">sm / md / lg radius</span>
+        </div>
+        <p style="font-size:12.5px;color:var(--text-secondary);margin:0;">Flat, hairline-bordered cards are default. Shadow (<code style="font-size:11px;">--shadow-pop</code> / <code style="font-size:11px;">--shadow-overlay</code>) is used only for things that float above content: popovers, modals, toasts — never for resting cards.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CORE COMPONENTS ============ -->
+  <section class="block" id="components">
+    <div class="block-head">
+      <div class="block-tag">02 · Core Components</div>
+      <h2>The building blocks</h2>
+      <p>Standard controls, tuned for clinical data entry: type-ahead everywhere a code set is involved, tabular numerals everywhere a number is involved.</p>
+    </div>
+
+    <div class="grid grid-3">
+      <div class="card">
+        <div class="card-title">Input field</div>
+        <label class="field-label">Dosage (mg)</label>
+        <input class="input error" value="850">
+        <div class="field-error">⚠ Exceeds standard max (500mg) for this patient's weight</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Type-ahead select (ICD-10)</div>
+        <label class="field-label">Diagnosis code</label>
+        <div class="typeahead">
+          <input class="input" value="Type 2 diab" readonly>
+          <div class="ta-results">
+            <div class="ta-row"><span>Type 2 diabetes mellitus, w/o complications</span><span class="code">E11.9</span></div>
+            <div class="ta-row"><span>Type 2 diabetes mellitus w/ retinopathy</span><span class="code">E11.31</span></div>
+            <div class="ta-row"><span>Type 2 diabetes mellitus w/ CKD</span><span class="code">E11.22</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Toggles &amp; checkboxes</div>
+        <div class="check-row"><input type="checkbox" checked><span>Fever ≥ 100.4°F</span></div>
+        <div class="check-row"><input type="checkbox"><span>Shortness of breath</span></div>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:10px;">
+          <div class="switch on" onclick="this.classList.toggle('on')"><div class="knob"></div></div>
+          <span>Notify care team on result</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Badges / status tags</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+          <span class="badge critical"><span class="dot"></span>Allergic — Penicillin</span>
+          <span class="badge caution"><span class="dot"></span>Fall risk</span>
+          <span class="badge success"><span class="dot"></span>Vitals stable</span>
+          <span class="badge info"><span class="dot"></span>Awaiting lab</span>
+          <span class="badge flag"><span class="dot"></span>Fasting</span>
+          <span class="badge neutral">Discharged</span>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Buttons &amp; actions</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+          <button class="btn btn-primary">Sign encounter</button>
+          <button class="btn btn-secondary">Print summary</button>
+          <button class="btn btn-ghost">Cancel</button>
+          <button class="btn btn-danger">Discontinue Rx</button>
+          <button class="btn btn-ai">✦ AI suggest</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Tooltip / popover</div>
+        <p style="font-size:12.5px;color:var(--text-secondary);margin-bottom:10px;">Hover the abbreviation:</p>
+        <div class="tip-wrap">
+          <span style="border-bottom:1px dotted var(--text-tertiary);font-weight:600;cursor:help;">NPO</span>
+          <div class="tip">Nil per os — nothing by mouth</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ EMR ORGANISMS ============ -->
+  <section class="block" id="organisms">
+    <div class="block-head">
+      <div class="block-tag">03 · EMR-Specific Organisms</div>
+      <h2>Complex clinical patterns</h2>
+      <p>The Patient Context Bar pinned above this page is one of these — always visible, never re-derived per screen.</p>
+    </div>
+
+    <div class="grid grid-2" style="margin-bottom:16px;">
+      <div class="card">
+        <div class="card-title">Clinical timeline</div>
+        <div class="timeline">
+          <div class="tl-item crit"><div class="tl-date">10 Jul 2026 · 09:12</div><div class="tl-title">Anaphylactic reaction flagged</div><div class="tl-desc">Reaction to amoxicillin during infusion — noted in allergy list</div></div>
+          <div class="tl-item"><div class="tl-date">03 Jul 2026</div><div class="tl-title">Follow-up consult · Dr. Nair</div><div class="tl-desc">Reviewed HbA1c trend, adjusted metformin dosage</div></div>
+          <div class="tl-item"><div class="tl-date">19 Jun 2026</div><div class="tl-title">Lab panel drawn</div><div class="tl-desc">CBC, CMP, HbA1c ordered</div></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Interactive anatomy visualizer</div>
+        <div class="anatomy-box">
+          <svg class="anatomy-svg" width="90" height="180" viewBox="0 0 90 180">
+            <circle cx="45" cy="18" r="14" fill="none" stroke="#C6CCD6" stroke-width="2"/>
+            <rect x="25" y="34" width="40" height="60" rx="10" fill="none" stroke="#C6CCD6" stroke-width="2"/>
+            <line x1="45" y1="94" x2="45" y2="150" stroke="#C6CCD6" stroke-width="2"/>
+            <line x1="45" y1="105" x2="20" y2="170" stroke="#C6CCD6" stroke-width="2"/>
+            <line x1="45" y1="105" x2="70" y2="170" stroke="#C6CCD6" stroke-width="2"/>
+            <circle class="anatomy-point" cx="55" cy="60" r="5"/>
+          </svg>
+          <div class="anatomy-list">
+            <div class="entry"><span class="badge critical" style="padding:2px 6px;">●</span><span>Localized pain — right lower ribcage, reported 7/10</span></div>
+            <div class="entry"><span class="badge neutral" style="padding:2px 6px;">●</span><span>Surgical scar — appendectomy, 2019</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-title">Advanced data table — lab flowsheet, sticky header, trend indicators</div>
+      <table class="datatable">
+        <thead><tr><th>Test</th><th>13 Jun</th><th>27 Jun</th><th>10 Jul</th><th>Trend</th><th>Range</th></tr></thead>
+        <tbody>
+          <tr><td>HbA1c (%)</td><td class="num tabnum">7.8</td><td class="num tabnum">7.4</td><td class="num tabnum">7.1</td><td><span class="trend down">▼ improving</span></td><td class="mono" style="color:var(--text-tertiary);">4.0–5.6</td></tr>
+          <tr class="row-crit"><td>Potassium (mmol/L)</td><td class="num tabnum">4.1</td><td class="num tabnum">4.3</td><td class="num tabnum">6.2</td><td><span class="trend up">▲ critical high</span></td><td class="mono" style="color:var(--text-tertiary);">3.5–5.1</td></tr>
+          <tr><td>eGFR</td><td class="num tabnum">78</td><td class="num tabnum">76</td><td class="num tabnum">77</td><td><span class="trend flat">— stable</span></td><td class="mono" style="color:var(--text-tertiary);">&gt;60</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-title">Prescription builder (eRx)</div>
+      <div class="rx-row">
+        <div><label class="field-label">Drug</label><input class="input" value="Amoxicillin 500mg"></div>
+        <div><label class="field-label">Dosage</label><input class="input mono" value="500 mg"></div>
+        <div><label class="field-label">Frequency</label><input class="input" value="TID"></div>
+        <div><label class="field-label">Duration</label><input class="input" value="7 days"></div>
+        <button class="btn btn-danger btn-sm">⚠ Add</button>
+      </div>
+      <div class="field-error" style="margin-top:10px;">⚠ Patient has a documented penicillin allergy — amoxicillin is contraindicated. This will require an interruptive override.</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Charting module — SOAP note with dictation</div>
+      <div class="soap-tabs">
+        <div class="soap-tab active">Subjective</div>
+        <div class="soap-tab">Objective</div>
+        <div class="soap-tab">Assessment</div>
+        <div class="soap-tab">Plan</div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:11.5px;color:var(--text-tertiary);">Patient-reported symptoms</span>
+        <span class="voice-pill">🎙 Listening <span class="bar" style="animation-delay:0s;"></span><span class="bar" style="animation-delay:.2s;"></span><span class="bar" style="animation-delay:.4s;"></span></span>
+      </div>
+      <div class="soap-editor">Patient reports mild intermittent chest tightness on exertion, resolving with rest. Denies radiation to arm or jaw. …/pmh expands to "no significant past medical history"</div>
+    </div>
+  </section>
+
+  <!-- ============ FEEDBACK & SAFETY ============ -->
+  <section class="block" id="safety">
+    <div class="block-head">
+      <div class="block-tag">04 · Feedback &amp; Safety</div>
+      <h2>Where error has real consequences</h2>
+      <p>Four distinct escalation levels, so a clinician can tell interruptive-critical from ambient-informational without reading the words first.</p>
+    </div>
+
+    <div class="grid grid-2" style="margin-bottom:16px;">
+      <div class="demo-frame">
+        <div class="modal">
+          <div class="modal-icon">!</div>
+          <h4>Allergy conflict detected</h4>
+          <p>Meera Shah has a documented penicillin allergy. Amoxicillin is in the same drug class. Overriding this requires a documented reason.</p>
+          <div class="modal-actions">
+            <button class="btn btn-ghost btn-sm">Cancel order</button>
+            <button class="btn btn-danger btn-sm">Override with reason</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="demo-frame">
+        <div class="toast"><span class="dot"></span>Lab results routed to Dr. Nair</div>
+        <span style="color:var(--text-tertiary);font-size:12.5px;">Non-interruptive toast — auto-dismisses, never blocks charting</span>
+      </div>
+    </div>
+
+    <div class="grid grid-2">
+      <div class="card">
+        <div class="card-title">Inline validation</div>
+        <label class="field-label">Warfarin dose (mg)</label>
+        <input class="input error" value="25">
+        <div class="field-error">⚠ 5× typical maintenance dose — confirm before saving</div>
+        <label class="field-label" style="margin-top:14px;">Phone number</label>
+        <input class="input" value="+91 98765 43210">
+        <div class="field-hint">Auto-formatted on entry</div>
+      </div>
+
+      <div class="demo-frame" style="padding:0;">
+        <div class="lockscreen">
+          <div class="icon">🔒</div>
+          <h4>Session locked — idle 5 min</h4>
+          <p>PHI hidden to maintain HIPAA / ABDM compliance. Re-authenticate to resume this chart.</p>
+          <button class="btn btn-primary btn-sm">Unlock with PIN</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ROLES ============ -->
+  <section class="block" id="roles">
+    <div class="block-head">
+      <div class="block-tag">05 · Role-Aware Surfaces</div>
+      <h2>Same system, seven roles</h2>
+      <p>Tokens and components don't change per role — density and available actions do. The context bar and signal-color vocabulary stay identical across every role so a shared shift-handoff conversation always uses the same visual language.</p>
+    </div>
+    <div class="role-strip">
+      <div class="role-chip active">Physician</div>
+      <div class="role-chip">Nurse</div>
+      <div class="role-chip">Pharmacist</div>
+      <div class="role-chip">Lab Technician</div>
+      <div class="role-chip">Front Desk / Registration</div>
+      <div class="role-chip">Billing</div>
+      <div class="role-chip">Facility Admin</div>
+    </div>
+  </section>
+
+  <!-- ============ GAPS ============ -->
+  <section class="block" id="gaps">
+    <div class="block-head">
+      <div class="block-tag">06 · Likely Gaps</div>
+      <h2>What the brief doesn't mention yet</h2>
+      <p>Beyond the components above, these are the things that tend to surface late in EMR builds — after the first real pilot, not before. Worth locking into the same foundation doc now.</p>
+    </div>
+    <div class="gap-list">
+      <div class="gap-item"><div class="gap-num">01</div><div><h5>Offline / degraded-connectivity states</h5><p>Wards with poor connectivity need an explicit "unsynced" indicator on every chart edit, distinct from a normal saved state.</p></div></div>
+      <div class="gap-item"><div class="gap-num">02</div><div><h5>Consent &amp; e-signature capture</h5><p>A dedicated pattern for ABDM consent artefacts and physician sign-off — different from a generic "confirm" button, needs its own audit trail visual.</p></div></div>
+      <div class="gap-item"><div class="gap-num">03</div><div><h5>Skeleton / loading states for FHIR calls</h5><p>Medplum/CARE round-trips aren't instant — every data table and banner needs a defined loading skeleton, not a blank flash.</p></div></div>
+      <div class="gap-item"><div class="gap-num">04</div><div><h5>Empty states</h5><p>"No allergies recorded" must look deliberately different from "still loading" — an empty chart section is a safety-relevant distinction, not a cosmetic one.</p></div></div>
+      <div class="gap-item"><div class="gap-num">05</div><div><h5>Print / PDF stylesheet</h5><p>Discharge summaries, prescriptions, and lab reports need a print-specific layout — the dark patient bar and sidebar chrome should never print.</p></div></div>
+      <div class="gap-item"><div class="gap-num">06</div><div><h5>Large touch targets for gloved use</h5><p>Bedside tablet interactions (vitals entry, medication administration/barcode scan) need a distinct "clinical touch" density mode with bigger hit areas than desktop.</p></div></div>
+      <div class="gap-item"><div class="gap-num">07</div><div><h5>Barcode / QR scan feedback</h5><p>Medication administration (5 Rights check) needs a dedicated scan-confirmation pattern — success/mismatch states, not a generic toast.</p></div></div>
+      <div class="gap-item"><div class="gap-num">08</div><div><h5>Audit trail / "who changed this" indicator</h5><p>Given the HIPAA audit logging requirement, any edited clinical value should support a small inline "history" affordance, not just a separate audit log screen.</p></div></div>
+      <div class="gap-item"><div class="gap-num">09</div><div><h5>Multilingual / regional numeral formats</h5><p>ABDM context implies Hindi/regional-language support and Indian date (DD-MM-YYYY) and currency conventions as first-class, not an afterthought locale switch.</p></div></div>
+      <div class="gap-item"><div class="gap-num">10</div><div><h5>Dark mode for night shift</h5><p>The token set above is light-first; a true dark variant (not just inverted grays) matters for ICU/night shift use and deserves its own contrast pass, not an automatic invert.</p></div></div>
+      <div class="gap-item"><div class="gap-num">11</div><div><h5>Keyboard-first power workflows</h5><p>Physicians charting dozens of patients a day need documented keyboard shortcuts and focus order — a mouse-only spec will get rejected in review.</p></div></div>
+      <div class="gap-item"><div class="gap-num">12</div><div><h5>Multi-tenant white-label tokens</h5><p>Since Urvos is multitenant, the token file should separate "system tokens" (signal colors, spacing — fixed) from "tenant tokens" (logo, one accent) so hospitals can brand without breaking clinical-safety colors.</p></div></div>
+    </div>
+  </section>
+
+</div>
+
+<footer>Clinical OS Design System — a foundation document for Urvos. Built to be locked before new feature screens are generated.</footer>
+
+<script>
+document.querySelectorAll('.soap-tab').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.soap-tab').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active');
+}));
+document.querySelectorAll('.role-chip').forEach(t=>t.addEventListener('click',()=>{
+  document.querySelectorAll('.role-chip').forEach(x=>x.classList.remove('active'));
+  t.classList.add('active');
+}));
+</script>
+</body>
+</html>

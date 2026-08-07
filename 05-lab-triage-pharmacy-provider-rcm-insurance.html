@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Urvos — Lab, Triage, Pharmacy, Provider, RCM & Insurance</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+*{box-sizing:border-box;}
+body{margin:0;background:var(--bg);color:var(--text-1);font-family:var(--font-ui);font-size:13.5px;-webkit-font-smoothing:antialiased;}
+h1,h2,h3,h4{margin:0;letter-spacing:-0.01em;}
+.serif{font-family:var(--font-serif);font-weight:600;}
+.mono{font-family:var(--font-data);font-variant-numeric:tabular-nums;}
+a{text-decoration:none;color:inherit;}
+.icon{width:15px;height:15px;stroke:currentColor;stroke-width:1.85;fill:none;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0;}
+
+.shell{max-width:1320px;margin:0 auto;padding:0 32px 100px;}
+.topband{background:var(--ink);color:#fff;padding:34px 32px;}
+.topband .inner{max-width:1320px;margin:0 auto;}
+.topband .eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;color:var(--pulse);background:rgba(25,227,154,0.12);padding:5px 11px;border-radius:20px;margin-bottom:12px;}
+.topband h1{font-family:var(--font-serif);font-size:26px;font-weight:600;}
+.topband p{color:#B9B4E0;font-size:13px;margin-top:8px;max-width:680px;line-height:1.55;}
+
+.catnav{position:sticky;top:0;z-index:40;background:rgba(244,245,250,0.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:12px 32px;display:flex;gap:16px;overflow-x:auto;white-space:nowrap;}
+.catnav a{font-size:12px;font-weight:600;color:var(--text-2);padding:5px 10px;border-radius:20px;}
+.catnav a:hover{background:var(--brand-tint);color:var(--brand-solid);}
+
+.cat{padding:44px 0 8px;border-top:1px solid var(--border);}
+.cat:first-of-type{border-top:none;}
+.cat-head{margin-bottom:20px;}
+.cat-tag{font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--brand-solid);font-weight:700;}
+.cat-head h2{font-family:var(--font-serif);font-size:22px;margin-top:6px;font-weight:600;}
+.cat-head p{color:var(--text-2);font-size:12.5px;margin-top:6px;max-width:660px;}
+
+.comp{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:16px;box-shadow:var(--shadow-card);}
+.comp-label{font-size:10px;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-3);font-weight:700;margin-bottom:12px;}
+.comp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;}
+.comp-grid.wide{grid-template-columns:repeat(auto-fill,minmax(340px,1fr));}
+.comp.full{grid-column:1/-1;}
+
+.btn{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:12.5px;padding:8px 14px;border-radius:var(--r-sm);border:1px solid transparent;cursor:pointer;}
+.btn-primary{background:var(--grad-brand);color:#fff;}
+.btn-secondary{background:var(--surface-soft);color:var(--text-1);border-color:var(--border-strong);}
+.btn-danger{background:var(--sig-critical);color:#fff;}
+.btn-sm{padding:6px 11px;font-size:11.5px;}
+.input{width:100%;padding:8px 11px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-size:12.5px;background:var(--surface-soft);color:var(--text-1);}
+label.fl{display:block;font-size:11.5px;font-weight:700;color:var(--text-2);margin-bottom:6px;}
+
+.badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:10.5px;font-weight:700;}
+.badge.critical{background:var(--sig-critical-tint);color:var(--sig-critical);}
+.badge.caution{background:var(--sig-caution-tint);color:var(--sig-caution);}
+.badge.success{background:var(--sig-success-tint);color:var(--sig-success);}
+.badge.info{background:var(--sig-info-tint);color:var(--sig-info);}
+.badge.ai{background:var(--brand-tint);color:var(--brand-solid);}
+.badge.neutral{background:var(--surface-soft);color:var(--text-2);}
+
+.avatar{width:28px;height:28px;border-radius:9px;background:var(--grad-brand);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;flex-shrink:0;}
+
+table.dt{width:100%;border-collapse:collapse;font-size:12px;}
+table.dt th{text-align:left;padding:9px 10px;font-size:10px;text-transform:uppercase;color:var(--text-3);border-bottom:2px solid var(--border);font-weight:700;}
+table.dt td{padding:10px 10px;border-bottom:1px solid var(--border);}
+table.dt td.num{font-family:var(--font-data);text-align:right;}
+
+.stepper{display:flex;align-items:center;}
+.step{display:flex;flex-direction:column;align-items:center;flex:1;position:relative;}
+.step .dot{width:22px;height:22px;border-radius:50%;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;z-index:1;}
+.step.done .dot{background:var(--sig-success);}
+.step.now .dot{background:var(--grad-brand);}
+.step.bad .dot{background:var(--sig-critical);}
+.step::after{content:'';position:absolute;top:11px;left:50%;width:100%;height:2px;background:var(--border);z-index:0;}
+.step:last-child::after{display:none;}
+.step.done::after{background:var(--sig-success);}
+.step .lbl{font-size:9.5px;color:var(--text-3);margin-top:6px;text-align:center;}
+
+.wl-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);}
+.wl-row:last-child{border:none;}
+.wl-ic{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.wl-main{flex:1;}
+.wl-title{font-weight:700;font-size:12.5px;}
+.wl-sub{font-size:11px;color:var(--text-3);}
+
+.qc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.qc-cell{text-align:center;background:var(--surface-soft);border-radius:8px;padding:8px 4px;}
+.qc-cell .n{font-family:var(--font-data);font-weight:700;font-size:13px;}
+.qc-cell.pass .n{color:var(--sig-success);}
+.qc-cell.fail .n{color:var(--sig-critical);}
+.qc-cell .l{font-size:9px;color:var(--text-3);text-transform:uppercase;margin-top:2px;}
+
+.esi-flow{display:flex;flex-direction:column;gap:6px;}
+.esi-node{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:var(--r-sm);font-size:12px;font-weight:600;}
+.esi-node.yes{border-left:3px solid var(--sig-critical);background:var(--sig-critical-tint);}
+.esi-node.no{border-left:3px solid var(--border-strong);background:var(--surface-soft);}
+
+.vitals-spark{display:flex;align-items:center;gap:12px;}
+.vitals-spark .n{font-family:var(--font-data);font-weight:700;font-size:16px;}
+
+.formulary-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px;}
+.formulary-row:last-child{border:none;}
+
+.tier{display:flex;gap:3px;}
+.tier span{width:16px;height:5px;border-radius:3px;background:var(--border);}
+.tier span.on{background:var(--brand-solid);}
+
+.provider-card{display:flex;gap:12px;align-items:flex-start;}
+.provider-card .av{width:44px;height:44px;border-radius:12px;background:var(--grad-brand);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;}
+.avail-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:10px;}
+.avail-cell{aspect-ratio:1;border-radius:6px;background:var(--sig-success-tint);}
+.avail-cell.busy{background:var(--sig-critical-tint);}
+.avail-cell.off{background:var(--surface-soft);}
+
+.aging-bar{display:flex;height:22px;border-radius:6px;overflow:hidden;}
+.aging-bar div{display:flex;align-items:center;justify-content:center;font-size:9.5px;color:#fff;font-weight:700;}
+
+.claim-track{display:flex;align-items:center;gap:4px;}
+.claim-dot{width:9px;height:9px;border-radius:50%;background:var(--border);}
+.claim-dot.done{background:var(--sig-success);}
+.claim-dot.now{background:var(--brand-solid);}
+.claim-line{flex:1;height:2px;background:var(--border);}
+.claim-line.done{background:var(--sig-success);}
+
+.coverage-meter{height:8px;border-radius:20px;background:var(--border);overflow:hidden;}
+.coverage-meter .fill{height:100%;background:var(--grad-brand);}
+
+.eob-row{display:flex;justify-content:space-between;font-size:11.5px;padding:5px 0;border-bottom:1px dashed var(--border);}
+.eob-row.total{font-weight:700;border-top:1px solid var(--border-strong);border-bottom:none;padding-top:8px;margin-top:4px;}
+
+footer{padding:44px 32px;color:var(--text-3);font-size:12px;text-align:center;}
+</style>
+</head>
+<body>
+
+<div class="topband">
+  <div class="inner">
+    <div class="eyebrow">✦ Volume 5 — Operational depth</div>
+    <h1>Lab, Triage, Encounter, Pharmacy, Provider, RCM & Insurance</h1>
+    <p>The back-office and cross-department layer — specimen tracking, dispensing verification, provider credentialing, claims, and coverage. Same tokens as every other volume, so it drops into the same system without a seam.</p>
+  </div>
+</div>
+
+<div class="catnav">
+  <a href="#lab">Lab</a><a href="#triage">Triage</a><a href="#encounter">Encounter</a><a href="#pharmacy">Pharmacy</a>
+  <a href="#provider">Provider</a><a href="#rcm">RCM</a><a href="#insurance">Insurance</a>
+</div>
+
+<div class="shell">
+
+  <!-- ============ LAB (ADVANCED) ============ -->
+  <section class="cat" id="lab">
+    <div class="cat-head"><div class="cat-tag">Lab — Operational Layer</div><h2>Beyond the order form: what the lab tech actually sees</h2></div>
+    <div class="comp-grid wide">
+      <div class="comp">
+        <div class="comp-label">Specimen tracking</div>
+        <div class="stepper"><div class="step done"><div class="dot">✓</div><div class="lbl">Collected</div></div><div class="step done"><div class="dot">✓</div><div class="lbl">In transit</div></div><div class="step now"><div class="dot">3</div><div class="lbl">Received</div></div><div class="step"><div class="dot">4</div><div class="lbl">Resulted</div></div></div>
+        <div style="font-size:11px;color:var(--text-3);margin-top:10px;">Specimen ID <span class="mono">SPX-4471-09</span> · Barcode-tracked</div>
+      </div>
+      <div class="comp">
+        <div class="comp-label">Lab worklist (technician view)</div>
+        <div class="wl-row"><div class="wl-ic" style="background:var(--sig-critical-tint);color:var(--sig-critical);">⚠</div><div class="wl-main"><div class="wl-title">CBC — R. Kumar</div><div class="wl-sub">STAT · overdue 6 min</div></div></div>
+        <div class="wl-row"><div class="wl-ic" style="background:var(--tile-blue-bg);color:var(--tile-blue-fg);">🧪</div><div class="wl-main"><div class="wl-title">HbA1c — M. Shah</div><div class="wl-sub">Routine · due 2:00 PM</div></div></div>
+      </div>
+      <div class="comp">
+        <div class="comp-label">QC panel — analyzer daily controls</div>
+        <div class="qc-grid">
+          <div class="qc-cell pass"><div class="n">✓</div><div class="l">Level 1</div></div>
+          <div class="qc-cell pass"><div class="n">✓</div><div class="l">Level 2</div></div>
+          <div class="qc-cell fail"><div class="n">✕</div><div class="l">Level 3</div></div>
+        </div>
+        <div style="font-size:11px;color:var(--sig-critical);margin-top:8px;font-weight:600;">Level 3 out of range — analyzer locked until recalibrated</div>
+      </div>
+      <div class="comp">
+        <div class="comp-label">Result verification & release</div>
+        <div style="font-size:12px;">Potassium 6.2 mmol/L <span class="badge critical" style="margin-left:6px;">Critical</span></div>
+        <div style="display:flex;gap:8px;margin-top:10px;"><button class="btn btn-primary btn-sm">Verify & release</button><button class="btn btn-secondary btn-sm">Repeat test</button></div>
+      </div>
+      <div class="comp">
+        <div class="comp-label">Microbiology culture card</div>
+        <div style="font-size:12px;">Blood culture — <span class="badge caution">Pending, day 2 of 5</span></div>
+        <div style="font-size:11px;color:var(--text-3);margin-top:6px;">Gram stain: Gram-positive cocci in clusters</div>
+      </div>
+      <div class="comp">
+        <div class="comp-label">Reference lab send-out tracker</div>
+        <div style="font-size:12px;">Genetic panel → SRL Diagnostics <span class="badge info" style="margin-left:6px;">In transit</span></div>
+        <div style="font-size:11px;color:var(--text-3);margin-top:6px;">Expected result: 15 Jul 2026</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TRIAGE (ADVANCED) ============ -->
+  <section class="cat" id="triage">
+    <div class="cat-head"><div class="cat-tag">Triage — Operational Layer</div><h2>Decision support and surge patterns</h2></div>
+    <div class="comp-grid wide">
+      <div class="comp">
+        <div class="comp-label">ESI acuity decision helper</div>
+        <div class="esi-flow">
+          <div class="esi-node yes">Life-threatening? → <b>ESI 1</b></div>
+          <div class="esi-node no">High-risk, severe pain? → ESI 2</div>
+          <div class="esi-node no">2+ resources needed? → ESI 3</div>
+        </div>
+      </div>
+      <div class="comp">
+        <div class="comp-label">Vitals trend during triage</div>
+        <div class="vitals-spark"><svg width="90" height="30" viewBox="0 0 90 30"><polyline points="0,20 20,15 40,22 60,10 90,8" fill="none" stroke="var(--sig-critical)" stroke-width="2"/></svg><div><div class="n">132/94</div><div style="font-size:10px;color:var(--text-3);">BP climbing</div></div></div>
+      </div>
+      <div class="comp">
+        <div class="comp-label">EMS / ambulance handoff form</div>
+        <div style="font-size:12px;color:var(--text-2);">Unit 14 · GCS 14 · SpO₂ 92% on 4L NC<br>MOI: MVC, restrained driver</div>
+      </div>
+      <div class="comp full">
+        <div class="comp-label">Mass casualty / surge board</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <span class="badge critical">Immediate — 3</span><span class="badge caution">Delayed — 7</span><span class="badge info">Minimal — 14</span><span class="badge neutral">Expectant — 1</span>
+          <span style="margin-left:auto;font-size:11.5px;color:var(--text-3);align-self:center;">Surge protocol active — 09:40 AM</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ENCOUNTER (ADVANCED) ============ -->
+  <section class="cat" id="encounter">
+    <div class="cat-head"><div class="cat-tag">Encounter — Operational Layer</div><h2>Visit type, billing capture, telehealth, co-sign</h2></div>
+    <div class="comp-grid wide">
+      <div class="comp"><div class="comp-label">Encounter type selector</div><div style="display:flex;gap:6px;flex-wrap:wrap;"><span class="badge ai" style="background:var(--brand-solid);color:#fff;">Follow-up</span><span class="badge neutral">New patient</span><span class="badge neutral">Telehealth</span><span class="badge neutral">Procedure</span></div></div>
+      <div class="comp"><div class="comp-label">E/M billing level capture</div><label class="fl">Visit complexity</label><select class="input"><option>99214 — Moderate complexity</option><option>99213 — Low complexity</option></select></div>
+      <div class="comp"><div class="comp-label">Telehealth video panel</div><div style="background:var(--ink);border-radius:var(--r-sm);height:70px;display:flex;align-items:center;justify-content:center;color:#8A85B8;font-size:11px;">📹 Connected · 00:14:22</div></div>
+      <div class="comp"><div class="comp-label">Co-signature request</div><div style="display:flex;align-items:center;gap:8px;"><div class="avatar">DR</div><div style="font-size:12px;">Awaiting co-sign — Dr. Nair <span class="badge caution" style="margin-left:6px;">Pending</span></div></div></div>
+      <div class="comp full"><div class="comp-label">Encounter close-out checklist</div><div style="display:flex;gap:16px;flex-wrap:wrap;font-size:12px;"><label><input type="checkbox" checked>Diagnosis coded</label><label><input type="checkbox" checked>Orders signed</label><label><input type="checkbox">Billing level confirmed</label><label><input type="checkbox">Patient instructions sent</label></div></div>
+    </div>
+  </section>
+
+  <!-- ============ PHARMACY ============ -->
+  <section class="cat" id="pharmacy">
+    <div class="cat-head"><div class="cat-tag">Pharmacy Operations</div><h2>The pharmacist's side of the counter</h2></div>
+    <div class="comp-grid wide">
+      <div class="comp">
+        <div class="comp-label">Pharmacy fill queue</div>
+        <div class="wl-row"><div class="wl-ic" style="background:var(--sig-critical-tint);color:var(--sig-critical);">℞</div><div class="wl-main"><div class="wl-title">Amoxicillin 500mg — R. Kumar</div><div class="wl-sub">Allergy flag — needs pharmacist override</div></div></div>
+        <div class="wl-row"><div class="wl-ic" style="background:var(--tile-blue-bg);color:var(--tile-blue-fg);">℞</div><div class="wl-main"><div class="wl-title">Metformin 500mg — M. Shah</div><div class="wl-sub">Ready to fill</div></div></div>
+      </div>
+      <div class="comp">
+        <div class="comp-label">Dispensing verification (fill / check)</div>
+        <div class="stepper"><div class="step done"><div class="dot">✓</div><div class="lbl">Filled</div></div><div class="step now"><div class="dot">2</div><div class="lbl">Pharmacist check</div></div><div class="step"><div class="dot">3</div><div class="lbl">Dispensed</div></div></div>
+      </div>
+      <div class="comp">
+        <div class="comp-label">Controlled substance log (Schedule II–V)</div>
+        <table class="dt"><thead><tr><th>Drug</th><th>Schedule</th><th>Count</th></tr></thead><tbody><tr><td>Morphine 10mg</td><td>II</td><td class="num">42</td></tr><tr><td>Alprazolam 0.5mg</td><td>IV</td><td class="num">118</td></tr></tbody></table>
+      </div>
+      <div class="comp">
+        <div class="comp-label">Formulary lookup</div>
+        <div class="formulary-row">Metformin 500mg <span class="tier"><span class="on"></span><span></span><span></span></span></div>
+        <div class="formulary-row">Insulin glargine <span class="tier"><span class="on"></span><span class="on"></span><span></span></span></div>
+        <div style="font-size:10.5px;color:var(--text-3);margin-top:4px;">Tier 1 = lowest copay</div>
+      </div>
+      <div class="comp">
+        <div class="comp-label">Medication reconciliation (transitions of care)</div>
+        <div style="font-size:12px;">Home med list vs. inpatient orders — <span class="badge caution">2 discrepancies</span></div>
+      </div>
+      <div class="comp">
+        <div class="comp-label">Adverse drug reaction report</div>
+        <div style="font-size:12px;color:var(--text-2);">Rash + hives, 20 min post-dose amoxicillin → filed to pharmacovigilance</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PROVIDER ============ -->
+  <section class="cat" id="provider">
+    <div class="cat-head"><div class="cat-tag">Provider</div><h2>Directory, availability, credentialing</h2></div>
+    <div class="comp-grid wide">
+      <div class="comp">
+        <div class="comp-label">Provider directory card</div>
+        <div class="provider-card"><div class="av">AN</div><div><div style="font-weight:700;font-size:13px;">Dr. Anjali Nair</div><div style="font-size:11px;color:var(--text-3);">Internal Medicine · License MCI-88214</div><span class="badge success" style="margin-top:6px;">Active</span></div></div>
+      </div>
+      <div class="comp">
+        <div class="comp-label">Availability grid — this week</div>
+        <div class="avail-grid"><div class="avail-cell"></div><div class="avail-cell"></div><div class="avail-cell busy"></div><div class="avail-cell"></div><div class="avail-cell"></div><div class="avail-cell off"></div><div class="avail-cell off"></div></div>
+      </div>
+      <div class="comp">
+        <div class="comp-label">Credentialing status</div>
+        <div class="stepper"><div class="step done"><div class="dot">✓</div><div class="lbl">Verified</div></div><div class="step done"><div class="dot">✓</div><div class="lbl">Privileged</div></div><div class="step now"><div class="dot">!</div><div class="lbl">Renewal due</div></div></div>
+        <div style="font-size:11px;color:var(--sig-caution);margin-top:8px;">DEA license expires in 28 days</div>
+      </div>
+      <div class="comp">
+        <div class="comp-label">On-call schedule</div>
+        <div style="font-size:12px;">Tonight: <b>Dr. Mehta</b> (Cardiology)<br>Tomorrow: <b>Dr. Rao</b> (General Medicine)</div>
+      </div>
+      <div class="comp full">
+        <div class="comp-label">Provider-to-provider consult request</div>
+        <div style="display:flex;gap:10px;align-items:center;"><div class="avatar" style="background:var(--tile-rose-fg);">SM</div><div style="flex:1;font-size:12px;">"Requesting cardiology consult for R. Kumar — chest pain, ESI 2"</div><button class="btn btn-primary btn-sm">Accept consult</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ RCM ============ -->
+  <section class="cat" id="rcm">
+    <div class="cat-head"><div class="cat-tag">Revenue Cycle Management</div><h2>Claims, charges, denials, and aging</h2></div>
+    <div class="comp-grid wide">
+      <div class="comp full">
+        <div class="comp-label">Claim status tracker</div>
+        <div class="claim-track">
+          <div class="claim-dot done"></div><div class="claim-line done"></div>
+          <div class="claim-dot done"></div><div class="claim-line done"></div>
+          <div class="claim-dot now"></div><div class="claim-line"></div>
+          <div class="claim-dot"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--text-3);margin-top:6px;"><span>Submitted</span><span>Accepted</span><span>Adjudicating</span><span>Paid</span></div>
+      </div>
+      <div class="comp"><div class="comp-label">Charge capture sheet</div><table class="dt"><thead><tr><th>CPT</th><th>Desc</th><th>Amt</th></tr></thead><tbody><tr><td>99214</td><td>Office visit</td><td class="num">₹2,400</td></tr><tr><td>80053</td><td>CMP panel</td><td class="num">₹850</td></tr></tbody></table></div>
+      <div class="comp"><div class="comp-label">Denial management worklist</div><div class="wl-row"><div class="wl-ic" style="background:var(--sig-critical-tint);color:var(--sig-critical);">✕</div><div class="wl-main"><div class="wl-title">Claim #88214 denied</div><div class="wl-sub">Reason: Missing prior auth</div></div></div></div>
+      <div class="comp"><div class="comp-label">A/R aging report</div><div class="aging-bar"><div style="width:40%;background:var(--sig-success);">0-30</div><div style="width:25%;background:var(--sig-caution);">31-60</div><div style="width:20%;background:#E08A1E;">61-90</div><div style="width:15%;background:var(--sig-critical);">90+</div></div></div>
+      <div class="comp full"><div class="comp-label">Coding review queue (CPT/ICD validation)</div><div style="font-size:12px;">Encounter #4471 — <span class="badge caution">Flagged: E11.9 doesn't support 99215</span> <button class="btn btn-secondary btn-sm" style="margin-left:10px;">Review</button></div></div>
+    </div>
+  </section>
+
+  <!-- ============ INSURANCE ============ -->
+  <section class="cat" id="insurance">
+    <div class="cat-head"><div class="cat-tag">Insurance</div><h2>Eligibility, coverage, authorization, EOB</h2></div>
+    <div class="comp-grid wide">
+      <div class="comp">
+        <div class="comp-label">Eligibility verification</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;"><span style="font-size:12px;">Star Health · Policy #SH88214</span><span class="badge success">Active</span></div>
+        <div style="font-size:11px;color:var(--text-3);margin-top:6px;">Verified 09:02 AM · real-time payer check</div>
+      </div>
+      <div class="comp">
+        <div class="comp-label">Coverage summary</div>
+        <div style="font-size:11.5px;margin-bottom:4px;">Deductible met</div><div class="coverage-meter"><div class="fill" style="width:65%;"></div></div>
+        <div style="font-size:10.5px;color:var(--text-3);margin-top:4px;">₹6,500 of ₹10,000 · Copay ₹500</div>
+      </div>
+      <div class="comp">
+        <div class="comp-label">Prior authorization tracker</div>
+        <div class="stepper"><div class="step done"><div class="dot">✓</div><div class="lbl">Submitted</div></div><div class="step now"><div class="dot">2</div><div class="lbl">Payer review</div></div><div class="step"><div class="dot">3</div><div class="lbl">Approved</div></div></div>
+        <div style="font-size:11px;color:var(--text-3);margin-top:8px;">MRI Lumbar Spine · Est. decision: 3 business days</div>
+      </div>
+      <div class="comp">
+        <div class="comp-label">Insurance card capture (OCR)</div>
+        <div style="background:linear-gradient(120deg,#4F3FE0,#2F6FED);border-radius:var(--r-sm);height:80px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;">📷 Scan captured — fields auto-filled</div>
+      </div>
+      <div class="comp full">
+        <div class="comp-label">EOB (Explanation of Benefits) viewer</div>
+        <div class="eob-row"><span>Billed amount</span><span class="mono">₹3,250</span></div>
+        <div class="eob-row"><span>Plan discount</span><span class="mono">−₹800</span></div>
+        <div class="eob-row"><span>Insurance paid</span><span class="mono">−₹1,950</span></div>
+        <div class="eob-row total"><span>Patient responsibility</span><span class="mono">₹500</span></div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>Urvos — Lab, Triage, Pharmacy, Provider, RCM & Insurance, Volume 5.</footer>
+</body>
+</html>

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Urvos — Documents, Messaging, Patient Portal, Errors & Print</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+.shell{max-width:1320px;margin:0 auto;padding:0 32px 100px;}
+.topband{background:var(--ink);color:#fff;padding:34px 32px;}
+.topband .inner{max-width:1320px;margin:0 auto;}
+.topband .eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;color:var(--pulse);background:rgba(25,227,154,0.12);padding:5px 11px;border-radius:20px;margin-bottom:12px;}
+.topband h1{font-family:var(--font-serif);font-size:26px;font-weight:600;}
+.topband p{color:#B9B4E0;font-size:13px;margin-top:8px;max-width:680px;line-height:1.55;}
+
+.catnav{position:sticky;top:0;z-index:40;background:rgba(244,245,250,0.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:12px 32px;display:flex;gap:16px;overflow-x:auto;white-space:nowrap;}
+.catnav a{font-size:12px;font-weight:600;color:var(--text-2);padding:5px 10px;border-radius:20px;}
+.catnav a:hover{background:var(--brand-tint);color:var(--brand-solid);}
+
+.cat{padding:44px 0 8px;border-top:1px solid var(--border);}
+.cat:first-of-type{border-top:none;}
+.cat-head{margin-bottom:20px;}
+.cat-tag{font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--brand-solid);font-weight:700;}
+.cat-head h2{font-family:var(--font-serif);font-size:22px;margin-top:6px;font-weight:600;}
+.cat-head p{color:var(--text-2);font-size:12.5px;margin-top:6px;max-width:680px;}
+
+.comp{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:16px;box-shadow:var(--shadow-card);}
+.comp-label{font-size:10px;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-3);font-weight:700;margin-bottom:12px;}
+.comp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;}
+.comp-grid.wide{grid-template-columns:repeat(auto-fill,minmax(380px,1fr));}
+.comp.full{grid-column:1/-1;}
+
+.btn{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:12.5px;padding:9px 15px;border-radius:var(--r-sm);border:1px solid transparent;cursor:pointer;}
+.btn-primary{background:var(--grad-brand);color:#fff;}
+.btn-secondary{background:var(--surface-soft);color:var(--text-1);border-color:var(--border-strong);}
+.btn-ghost{background:transparent;color:var(--text-2);}
+.btn-danger{background:var(--sig-critical);color:#fff;}
+.btn-sm{padding:6px 11px;font-size:11.5px;}
+.input{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-size:12.5px;background:var(--surface-soft);color:var(--text-1);}
+label.fl{display:block;font-size:11.5px;font-weight:700;color:var(--text-2);margin-bottom:6px;}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:10.5px;font-weight:700;}
+.badge.critical{background:var(--sig-critical-tint);color:var(--sig-critical);}
+.badge.caution{background:var(--sig-caution-tint);color:var(--sig-caution);}
+.badge.success{background:var(--sig-success-tint);color:var(--sig-success);}
+.badge.info{background:var(--sig-info-tint);color:var(--sig-info);}
+.avatar{width:30px;height:30px;border-radius:9px;background:var(--grad-brand);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;}
+
+/* ============ DOCUMENTS ============ */
+.upload-zone{border:2px dashed var(--border-strong);border-radius:var(--r-md);padding:30px;text-align:center;background:var(--surface-soft);}
+.upload-zone .ic{font-size:26px;margin-bottom:8px;}
+.upload-zone b{font-size:12.5px;display:block;margin-bottom:3px;}
+.upload-zone p{font-size:11px;color:var(--text-3);margin:0;}
+
+.doc-row{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);}
+.doc-row:last-child{border:none;}
+.doc-ic{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:13px;}
+.doc-title{font-weight:700;font-size:12.5px;}
+.doc-sub{font-size:10.5px;color:var(--text-3);}
+
+.doc-preview{background:#3A3A44;border-radius:var(--r-md);overflow:hidden;}
+.doc-preview .page{background:#fff;margin:16px auto;width:75%;aspect-ratio:8.5/11;border-radius:4px;box-shadow:0 8px 24px rgba(0,0,0,0.3);padding:14px;font-size:8px;color:#333;}
+.doc-preview .toolbar{background:#2A2A32;color:#fff;padding:8px 14px;font-size:11px;display:flex;justify-content:space-between;align-items:center;}
+
+.ocr-box{display:flex;gap:14px;align-items:center;}
+.ocr-scan{width:90px;height:56px;background:linear-gradient(120deg,#4F3FE0,#2F6FED);border-radius:8px;flex-shrink:0;}
+.ocr-fields{flex:1;font-size:11.5px;color:var(--text-2);line-height:1.8;}
+
+/* ============ MESSAGING ============ */
+.msg-shell{display:grid;grid-template-columns:220px 1fr;border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;height:340px;}
+.msg-list{background:var(--surface-soft);border-right:1px solid var(--border);overflow-y:auto;}
+.msg-item{display:flex;gap:9px;padding:11px 12px;border-bottom:1px solid var(--border);cursor:pointer;}
+.msg-item.active{background:#fff;}
+.msg-item .nm{font-weight:700;font-size:12px;}
+.msg-item .pv{font-size:10.5px;color:var(--text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.msg-item .un{width:7px;height:7px;border-radius:50%;background:var(--brand-solid);margin-left:auto;flex-shrink:0;align-self:center;}
+
+.msg-thread{display:flex;flex-direction:column;}
+.msg-thread-head{padding:12px 16px;border-bottom:1px solid var(--border);font-weight:700;font-size:13px;}
+.msg-body{flex:1;padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;}
+.bubble{max-width:70%;padding:9px 13px;border-radius:14px;font-size:12px;line-height:1.5;}
+.bubble.in{background:var(--surface-soft);align-self:flex-start;border-bottom-left-radius:4px;}
+.bubble.out{background:var(--grad-brand);color:#fff;align-self:flex-end;border-bottom-right-radius:4px;}
+.bubble .mention{background:rgba(79,63,224,0.16);color:var(--brand-solid);border-radius:4px;padding:0 3px;font-weight:700;}
+.bubble.out .mention{background:rgba(255,255,255,0.2);color:#fff;}
+.msg-input{display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--border);}
+
+/* ============ PATIENT PORTAL (distinct, friendlier register) ============ */
+.portal-shell{background:#FBFAF7;border-radius:var(--r-lg);overflow:hidden;border:1px solid var(--border);}
+.portal-top{background:#fff;border-bottom:1px solid var(--border);padding:16px 24px;display:flex;align-items:center;gap:14px;}
+.portal-top .mark{width:30px;height:30px;border-radius:10px;background:var(--grad-brand);}
+.portal-body{padding:24px;}
+.portal-hello{font-family:var(--font-serif);font-size:20px;font-weight:600;margin-bottom:4px;}
+.portal-sub{color:var(--text-2);font-size:12.5px;margin-bottom:18px;}
+.portal-card{background:#fff;border:1px solid var(--border);border-radius:var(--r-md);padding:16px;}
+.portal-appt{display:flex;align-items:center;gap:12px;}
+.portal-appt .date-block{background:var(--brand-tint);color:var(--brand-solid);border-radius:10px;padding:8px 12px;text-align:center;flex-shrink:0;}
+.portal-appt .date-block .d{font-weight:800;font-size:16px;}
+.portal-appt .date-block .m{font-size:9px;text-transform:uppercase;}
+.portal-tile{background:#fff;border:1px solid var(--border);border-radius:var(--r-md);padding:14px;text-align:center;}
+.portal-tile .ic{font-size:20px;margin-bottom:6px;}
+.portal-tile b{display:block;font-size:12px;}
+
+/* ============ SYSTEM ERROR PAGES ============ */
+.err-frame{background:var(--surface-soft);border-radius:var(--r-lg);padding:50px 24px;text-align:center;}
+.err-code{font-family:var(--font-serif);font-size:46px;font-weight:600;color:var(--brand-solid);opacity:0.35;}
+.err-frame.crit .err-code{color:var(--sig-critical);}
+.err-frame h4{font-family:var(--font-serif);font-size:18px;margin:6px 0 8px;}
+.err-frame p{color:var(--text-2);font-size:12.5px;max-width:320px;margin:0 auto 18px;line-height:1.5;}
+.offline-bar{display:flex;align-items:center;gap:10px;background:var(--ink);color:#fff;padding:10px 16px;border-radius:var(--r-sm);font-size:12px;font-weight:600;}
+.offline-bar .dot{width:7px;height:7px;border-radius:50%;background:var(--sig-caution);}
+
+/* ============ PRINT TEMPLATES ============ */
+.print-page{background:#fff;border:1px solid var(--border-strong);border-radius:6px;padding:20px;font-size:10.5px;color:#000;box-shadow:0 2px 12px rgba(0,0,0,0.08);}
+.print-page .ph{display:flex;justify-content:space-between;border-bottom:2px solid #000;padding-bottom:8px;margin-bottom:10px;}
+.print-page .ph b{font-size:13px;}
+.print-page .row{display:flex;justify-content:space-between;padding:3px 0;}
+.print-page hr{border:none;border-top:1px solid #ccc;margin:8px 0;}
+.rx-pad{border:1.5px dashed #999;border-radius:6px;padding:8px 10px;margin:8px 0;font-family:var(--font-data);font-size:11px;}
+
+footer{padding:44px 32px;color:var(--text-3);font-size:12px;text-align:center;}
+</style>
+</head>
+<body>
+
+<div class="topband">
+  <div class="inner">
+    <div class="eyebrow">✦ Volume 8 — The last layer</div>
+    <h1>Documents, Messaging, Patient Portal, Errors & Print</h1>
+    <p>Documents and messaging close out the clinician-facing system. The patient portal is deliberately a different register — same tokens, warmer execution, since patients aren't clinicians under time pressure.</p>
+  </div>
+</div>
+
+<div class="catnav">
+  <a href="#documents">Documents</a><a href="#messaging">Messaging</a><a href="#portal">Patient Portal</a><a href="#errors">System Errors</a><a href="#print">Print Templates</a>
+</div>
+
+<div class="shell">
+
+  <!-- ============ DOCUMENTS ============ -->
+  <section class="cat" id="documents">
+    <div class="cat-head"><div class="cat-tag">Documents</div><h2>Upload, preview, library, OCR intake</h2></div>
+    <div class="comp-grid wide">
+      <div class="comp">
+        <div class="comp-label">Upload widget</div>
+        <div class="upload-zone"><div class="ic">📄</div><b>Drop files or click to upload</b><p>PDF, JPG, PNG up to 25MB</p></div>
+      </div>
+      <div class="comp">
+        <div class="comp-label">Document library</div>
+        <div class="doc-row"><div class="doc-ic" style="background:var(--tile-rose-bg);color:var(--tile-rose-fg);">📄</div><div style="flex:1;"><div class="doc-title">Discharge Summary — 3 Jul.pdf</div><div class="doc-sub">248 KB · uploaded by Dr. Nair</div></div><button class="btn btn-ghost btn-sm">View</button></div>
+        <div class="doc-row"><div class="doc-ic" style="background:var(--tile-blue-bg);color:var(--tile-blue-fg);">🖼</div><div style="flex:1;"><div class="doc-title">Chest X-ray — AP.jpg</div><div class="doc-sub">1.2 MB · Radiology</div></div><button class="btn btn-ghost btn-sm">View</button></div>
+        <div class="doc-row"><div class="doc-ic" style="background:var(--tile-amber-bg);color:var(--tile-amber-fg);">📄</div><div style="flex:1;"><div class="doc-title">Insurance Card — Star Health.pdf</div><div class="doc-sub">88 KB · self-uploaded</div></div><button class="btn btn-ghost btn-sm">View</button></div>
+      </div>
+      <div class="comp full">
+        <div class="comp-label">File preview — PDF/image viewer</div>
+        <div class="doc-preview">
+          <div class="toolbar"><span>Discharge Summary — 3 Jul.pdf</span><span>Page 1 of 2 · 🔍 ⤓ ✕</span></div>
+          <div class="page">
+            <b style="font-size:11px;">DISCHARGE SUMMARY</b><br><br>
+            Patient: Meera Shah · MRN 8827-441-09<br>
+            Diagnosis: Type 2 Diabetes Mellitus, well-controlled<br>
+            Condition at discharge: Stable<br>
+            Follow-up: 24 Jul 2026, Dr. A. Nair
+          </div>
+        </div>
+      </div>
+      <div class="comp full">
+        <div class="comp-label">Scanned intake — OCR auto-fill</div>
+        <div class="ocr-box">
+          <div class="ocr-scan"></div>
+          <div class="ocr-fields">✓ Name: Meera Shah &nbsp; ✓ DOB: 14 Mar 1985 &nbsp; ✓ Insurance ID: SH88214<br><span style="color:var(--sig-caution);">⚠ Address field low-confidence — please verify</span></div>
+          <button class="btn btn-primary btn-sm">Confirm & save</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MESSAGING ============ -->
+  <section class="cat" id="messaging">
+    <div class="cat-head"><div class="cat-tag">Messaging</div><h2>Secure clinician inbox — distinct from notifications</h2><p>Notifications are system-generated and ambient; this is a real synchronous conversation between two people, so it gets its own space rather than living in the bell panel.</p></div>
+    <div class="comp full" style="padding:0;">
+      <div class="msg-shell">
+        <div class="msg-list">
+          <div class="msg-item active"><div class="avatar" style="background:var(--tile-rose-fg);">SM</div><div style="flex:1;min-width:0;"><div class="nm">Dr. Priyanka Mehta</div><div class="pv">Can you review the ECG for...</div></div><div class="un"></div></div>
+          <div class="msg-item"><div class="avatar" style="background:var(--tile-blue-fg);">RN</div><div style="flex:1;min-width:0;"><div class="nm">Nurse Station 4B</div><div class="pv">Vitals updated for M. Shah</div></div></div>
+          <div class="msg-item"><div class="avatar" style="background:var(--tile-amber-fg);">PH</div><div style="flex:1;min-width:0;"><div class="nm">Pharmacy</div><div class="pv">Refill question re: dosage</div></div></div>
+        </div>
+        <div class="msg-thread">
+          <div class="msg-thread-head">Dr. Priyanka Mehta · Cardiology</div>
+          <div class="msg-body">
+            <div class="bubble in">Requesting cardiology consult for <span class="mention">@Rohit Kumar</span> — chest pain, ESI 2.</div>
+            <div class="bubble out">On it — pulling his ECG now.</div>
+            <div class="bubble in">Thanks. Also loop in <span class="mention">@Dr.Nair</span> once you have a read.</div>
+          </div>
+          <div class="msg-input"><input class="input" placeholder="Message Dr. Mehta…"><button class="btn btn-primary btn-sm">Send</button></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PATIENT PORTAL ============ -->
+  <section class="cat" id="portal">
+    <div class="cat-head"><div class="cat-tag">Patient Portal</div><h2>The one patient-facing surface — a deliberately different register</h2><p>Warmer serif greeting, softer off-white canvas, plain-language labels. Same brand gradient and signal colors underneath, but nothing here should feel like clinical software.</p></div>
+    <div class="comp full" style="padding:0;">
+      <div class="portal-shell">
+        <div class="portal-top"><div class="mark"></div><b style="font-family:var(--font-serif);">Urvos — My Health</b></div>
+        <div class="portal-body">
+          <div class="portal-hello">Hi Meera 👋</div>
+          <div class="portal-sub">Here's what's coming up and what needs your attention.</div>
+          <div class="portal-card" style="margin-bottom:14px;">
+            <div class="portal-appt">
+              <div class="date-block"><div class="d">24</div><div class="m">Jul</div></div>
+              <div><b style="font-size:13px;">Follow-up with Dr. Nair</b><div style="font-size:11px;color:var(--text-3);">10:00 AM · Apollo Hospitals, Room 4B</div></div>
+              <button class="btn btn-secondary btn-sm" style="margin-left:auto;">Reschedule</button>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+            <div class="portal-tile"><div class="ic">📅</div><b>Book visit</b></div>
+            <div class="portal-tile"><div class="ic">📋</div><b>Health records</b></div>
+            <div class="portal-tile"><div class="ic">📹</div><b>Join telehealth</b></div>
+            <div class="portal-tile"><div class="ic">💳</div><b>Pay bill</b></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SYSTEM ERROR PAGES ============ -->
+  <section class="cat" id="errors">
+    <div class="cat-head"><div class="cat-tag">System Errors</div><h2>App-level, not just table-level</h2></div>
+    <div class="comp-grid wide">
+      <div class="comp"><div class="err-frame"><div class="err-code">404</div><h4>Page not found</h4><p>This chart or record may have been moved.</p><button class="btn btn-primary btn-sm">Back to dashboard</button></div></div>
+      <div class="comp"><div class="err-frame crit"><div class="err-code">500</div><h4>Something went wrong</h4><p>Our team's been notified. Your data wasn't lost.</p><button class="btn btn-primary btn-sm">Retry</button></div></div>
+      <div class="comp"><div class="err-frame"><div class="err-code">⏳</div><h4>Scheduled maintenance</h4><p>Urvos is back at 2:00 AM IST. Critical alerts still route via SMS.</p></div></div>
+      <div class="comp"><div class="err-frame"><div class="err-code">🔒</div><h4>Session expired</h4><p>For your security, please sign in again.</p><button class="btn btn-primary btn-sm">Sign in</button></div></div>
+      <div class="comp full"><div class="comp-label">Offline banner — persistent, not a toast</div><div class="offline-bar"><span class="dot"></span>You're offline — changes will sync automatically when connection returns</div></div>
+    </div>
+  </section>
+
+  <!-- ============ PRINT TEMPLATES ============ -->
+  <section class="cat" id="print">
+    <div class="cat-head"><div class="cat-tag">Print Templates</div><h2>Beyond the discharge summary</h2><p>Every print template drops all app chrome — sidebar, gradient, shadows — and prints in plain black-on-white, since these often get faxed or photocopied.</p></div>
+    <div class="comp-grid wide">
+      <div class="comp">
+        <div class="comp-label">Prescription pad</div>
+        <div class="print-page">
+          <div class="ph"><b>Dr. Anjali Nair, MD</b><span>MCI-88214</span></div>
+          <div class="row"><span>Patient</span><span>Meera Shah, 41F</span></div>
+          <div class="row"><span>Date</span><span>11 Jul 2026</span></div>
+          <hr>
+          <div class="rx-pad">℞ Metformin 500mg<br>Sig: 1 tab BID × 90 days<br>Refills: 2</div>
+          <div style="text-align:right;margin-top:10px;">Signature: <i>A. Nair</i></div>
+        </div>
+      </div>
+      <div class="comp">
+        <div class="comp-label">Lab requisition</div>
+        <div class="print-page">
+          <div class="ph"><b>Lab Requisition</b><span>Apollo Diagnostics</span></div>
+          <div class="row"><span>Patient</span><span>Meera Shah · MRN 8827-441-09</span></div>
+          <div class="row"><span>Tests</span><span>CBC, CMP, HbA1c</span></div>
+          <div class="row"><span>Priority</span><span>Routine</span></div>
+          <hr>
+          <div style="font-size:9px;color:#666;">Barcode: |||‖|||‖||| SPX-4471-09</div>
+        </div>
+      </div>
+      <div class="comp full">
+        <div class="comp-label">Full chart export</div>
+        <div class="print-page">
+          <div class="ph"><b>Complete Patient Chart</b><span>Generated 11 Jul 2026</span></div>
+          <div class="row"><span>Demographics</span><span>✓ included</span></div>
+          <div class="row"><span>Medications (active + discontinued)</span><span>✓ included</span></div>
+          <div class="row"><span>Lab history (24 months)</span><span>✓ included</span></div>
+          <div class="row"><span>Encounter notes</span><span>✓ included</span></div>
+          <div class="row"><span>Billing / insurance</span><span>☐ excluded — separate request</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>Urvos — Documents, Messaging, Patient Portal, Errors & Print, Volume 8. The final piece of the system.</footer>
+</body>
+</html>

@@ -1,0 +1,55 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Theme & Design/Customising The Theme" />
+
+# Customising The Theme
+
+The Urvos Design System is designed to be highly customizable. By changing just a few CSS variables in a single file, you can completely rebrand the application or introduce new themes (like Cardiology Blue or Pediatrics Green).
+
+## How it works
+
+We use CSS Custom Properties (Variables) to define our tokens. These tokens are mapped to Tailwind classes using the `urvos-` prefix.
+
+For example, the variable `--urvos-brand-solid` is mapped to the Tailwind class `bg-urvos-brand-solid` and `text-urvos-brand-solid`.
+
+### Changing a Color
+
+To change a color across the entire application, you only need to update `tokens.css`.
+
+#### 1. Open `tokens.css`
+Locate the `:root` block for the light mode variables, and the `[data-theme="dark"]` block for the dark mode variables.
+
+#### 2. Update the variable
+If you want to change the primary brand color to a deep purple:
+
+```css
+:root {
+  /* ... */
+  --urvos-brand-solid: #6b21a8; 
+  /* ... */
+}
+
+[data-theme="dark"] {
+  /* ... */
+  --urvos-brand-solid: #a855f7; 
+  /* ... */
+}
+```
+
+#### 3. Verify the change
+Open the **Theme Studio** or the **Full System Preview** in Storybook. You will instantly see the new purple brand color applied to all Buttons, Badges, and highlights.
+
+## Creating Brand Variants (Future-Proofing)
+
+If you need a completely different theme for a specific department or brand, you can add a new data attribute block to `tokens.css`.
+
+```css
+[data-theme="cardiology-blue"] {
+  --urvos-brand-solid: #1e3a8a;
+  --urvos-surface: #f0f9ff;
+  --urvos-ink: #0f172a;
+  /* Override other necessary variables */
+}
+```
+
+When you apply `data-theme="cardiology-blue"` to the root `<html>` element, the entire application will switch to the Cardiology theme.

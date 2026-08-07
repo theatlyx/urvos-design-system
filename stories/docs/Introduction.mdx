@@ -1,0 +1,23 @@
+import { Meta } from '@storybook/blocks';
+
+<Meta title="Theme & Design/Introduction" />
+
+# Urvos Design System
+
+Welcome to the Urvos Design System documentation! This system is built to provide a consistent, accessible, and beautiful experience for healthcare applications.
+
+## Getting Started
+
+This documentation site is built directly into Storybook. It serves as the single source of truth for all components, design tokens, and theme configurations.
+
+### Navigation
+
+- **Theme & Design**: Learn how to customize the theme, view the available tokens in the Theme Studio, and understand the design philosophy.
+- **System**: View the Full System Preview to see all components together in both light and dark modes side-by-side.
+- **Components**: Browse the individual React components, view their API, and interact with them in isolation.
+
+## Core Principles
+
+1. **Single Source of Truth**: All design decisions (colors, typography, spacing) live in `tokens.css` as CSS variables.
+2. **Theme Aware**: Every component is built to automatically adapt to light and dark modes based on the `data-theme` attribute.
+3. **Semantic Utilities**: We use `urvos-*` classes to map our CSS variables to Tailwind, avoiding hardcoded colors in our components.

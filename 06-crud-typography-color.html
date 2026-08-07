@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Urvos — CRUD Patterns, Typography & Color</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="tokens.css">
+<style>
+*{box-sizing:border-box;}
+body{margin:0;background:var(--bg);color:var(--text-1);font-family:var(--font-ui);font-size:13.5px;-webkit-font-smoothing:antialiased;}
+h1,h2,h3,h4{margin:0;letter-spacing:-0.01em;}
+.serif{font-family:var(--font-serif);font-weight:600;}
+.mono{font-family:var(--font-data);font-variant-numeric:tabular-nums;}
+a{text-decoration:none;color:inherit;}
+
+.shell{max-width:1320px;margin:0 auto;padding:0 32px 100px;}
+.topband{background:var(--ink);color:#fff;padding:34px 32px;}
+.topband .inner{max-width:1320px;margin:0 auto;}
+.topband .eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:11px;font-weight:700;color:var(--pulse);background:rgba(25,227,154,0.12);padding:5px 11px;border-radius:20px;margin-bottom:12px;}
+.topband h1{font-family:var(--font-serif);font-size:26px;font-weight:600;}
+.topband p{color:#B9B4E0;font-size:13px;margin-top:8px;max-width:680px;line-height:1.55;}
+
+.catnav{position:sticky;top:0;z-index:40;background:rgba(244,245,250,0.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);padding:12px 32px;display:flex;gap:16px;overflow-x:auto;white-space:nowrap;}
+.catnav a{font-size:12px;font-weight:600;color:var(--text-2);padding:5px 10px;border-radius:20px;}
+.catnav a:hover{background:var(--brand-tint);color:var(--brand-solid);}
+
+.cat{padding:44px 0 8px;border-top:1px solid var(--border);}
+.cat:first-of-type{border-top:none;}
+.cat-head{margin-bottom:20px;}
+.cat-tag{font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--brand-solid);font-weight:700;}
+.cat-head h2{font-family:var(--font-serif);font-size:22px;margin-top:6px;font-weight:600;}
+.cat-head p{color:var(--text-2);font-size:12.5px;margin-top:6px;max-width:680px;}
+
+.comp{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:16px;box-shadow:var(--shadow-card);}
+.comp-label{font-size:10px;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-3);font-weight:700;margin-bottom:12px;}
+.comp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
+.comp-grid.wide{grid-template-columns:repeat(auto-fill,minmax(360px,1fr));}
+.comp.full{grid-column:1/-1;}
+
+.btn{display:inline-flex;align-items:center;gap:6px;font-weight:700;font-size:12.5px;padding:9px 15px;border-radius:var(--r-sm);border:1px solid transparent;cursor:pointer;}
+.btn-primary{background:var(--grad-brand);color:#fff;}
+.btn-secondary{background:var(--surface-soft);color:var(--text-1);border-color:var(--border-strong);}
+.btn-ghost{background:transparent;color:var(--text-2);}
+.btn-danger{background:var(--sig-critical);color:#fff;}
+.btn-danger.disabled{background:var(--border);color:var(--text-3);cursor:not-allowed;}
+.btn-sm{padding:6px 11px;font-size:11.5px;}
+.input{width:100%;padding:9px 12px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-size:12.5px;background:var(--surface-soft);color:var(--text-1);}
+.input:focus{outline:none;border-color:var(--brand-solid);background:#fff;}
+label.fl{display:block;font-size:11.5px;font-weight:700;color:var(--text-2);margin-bottom:6px;}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:10.5px;font-weight:700;}
+.badge.critical{background:var(--sig-critical-tint);color:var(--sig-critical);}
+.badge.caution{background:var(--sig-caution-tint);color:var(--sig-caution);}
+.badge.success{background:var(--sig-success-tint);color:var(--sig-success);}
+
+/* ============ CRUD PATTERNS ============ */
+.crud-flow{display:flex;align-items:center;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+.crud-step{background:var(--surface-soft);border-radius:20px;padding:5px 13px;font-size:11px;font-weight:700;color:var(--text-2);}
+.crud-step.now{background:var(--grad-brand);color:#fff;}
+.crud-arrow{color:var(--text-3);font-size:12px;}
+
+.rv-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);font-size:12.5px;}
+.rv-row:last-child{border:none;}
+.rv-row .k{color:var(--text-3);font-weight:600;}
+.rv-row .v{font-weight:600;}
+
+.inline-edit{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:8px;background:var(--surface-soft);}
+.inline-edit.editing{background:#fff;border:1.5px solid var(--brand-solid);}
+.inline-edit .pencil{margin-left:auto;color:var(--text-3);font-size:12px;cursor:pointer;}
+
+.confirm-modal{background:#fff;border-radius:var(--r-lg);box-shadow:var(--shadow-pop);max-width:340px;padding:22px;}
+.confirm-modal .ic{width:38px;height:38px;border-radius:12px;background:var(--sig-critical-tint);color:var(--sig-critical);display:flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:12px;}
+.confirm-modal h4{font-size:14.5px;margin-bottom:6px;}
+.confirm-modal p{font-size:12px;color:var(--text-2);margin:0 0 12px;line-height:1.5;}
+.confirm-type{border:1.5px solid var(--sig-critical);background:var(--sig-critical-tint);border-radius:var(--r-sm);padding:9px 12px;font-size:12.5px;width:100%;margin-bottom:14px;font-family:var(--font-data);}
+.confirm-actions{display:flex;gap:8px;justify-content:flex-end;}
+
+.undo-toast{display:inline-flex;align-items:center;gap:12px;background:var(--ink);color:#fff;padding:11px 16px;border-radius:var(--r-sm);font-size:12.5px;}
+.undo-toast .u{color:var(--pulse);font-weight:700;cursor:pointer;}
+
+.drawer-edit{background:#fff;border:1px solid var(--border);border-radius:var(--r-md);box-shadow:var(--shadow-pop);padding:18px;}
+
+.crud-matrix{width:100%;border-collapse:collapse;font-size:12px;}
+.crud-matrix th{text-align:left;padding:9px 11px;font-size:10px;text-transform:uppercase;color:var(--text-3);border-bottom:2px solid var(--border);font-weight:700;}
+.crud-matrix td{padding:10px 11px;border-bottom:1px solid var(--border);color:var(--text-2);}
+.crud-matrix td.op{font-weight:700;color:var(--text-1);}
+
+/* ============ TYPOGRAPHY ============ */
+.type-specimen{display:flex;align-items:baseline;gap:20px;padding:14px 0;border-bottom:1px solid var(--border);}
+.type-specimen:last-child{border:none;}
+.type-meta{width:200px;flex-shrink:0;}
+.type-meta .name{font-size:12px;font-weight:700;}
+.type-meta .spec{font-size:10.5px;color:var(--text-3);font-family:var(--font-data);margin-top:2px;}
+.type-meta .use{font-size:10.5px;color:var(--text-3);margin-top:3px;}
+.type-sample{flex:1;overflow:hidden;}
+
+.type-rule{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);font-size:12px;}
+.type-rule:last-child{border:none;}
+.type-rule .tag{background:var(--sig-critical-tint);color:var(--sig-critical);font-size:9.5px;font-weight:800;padding:2px 7px;border-radius:5px;flex-shrink:0;height:fit-content;}
+.type-rule.do .tag{background:var(--sig-success-tint);color:var(--sig-success);}
+
+/* ============ COLOR ============ */
+.ramp{display:grid;grid-template-columns:repeat(10,1fr);border-radius:var(--r-md);overflow:hidden;border:1px solid var(--border);}
+.ramp div{height:52px;position:relative;}
+.ramp div span{position:absolute;bottom:4px;left:6px;font-size:9px;font-family:var(--font-data);}
+.ramp-label{font-size:11px;font-weight:700;margin:16px 0 8px;color:var(--text-2);}
+
+.sig-set{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border-radius:var(--r-sm);overflow:hidden;border:1px solid var(--border);}
+.sig-set div{height:50px;display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:700;font-family:var(--font-data);}
+
+.usage-table{width:100%;border-collapse:collapse;font-size:12px;}
+.usage-table th{text-align:left;padding:9px 11px;font-size:10px;text-transform:uppercase;color:var(--text-3);border-bottom:2px solid var(--border);font-weight:700;}
+.usage-table td{padding:10px 11px;border-bottom:1px solid var(--border);}
+.swatch-sm{width:14px;height:14px;border-radius:4px;display:inline-block;vertical-align:middle;margin-right:8px;}
+
+.contrast-pair{display:flex;align-items:center;justify-content:center;height:60px;border-radius:var(--r-sm);font-size:12px;font-weight:700;}
+
+footer{padding:44px 32px;color:var(--text-3);font-size:12px;text-align:center;}
+</style>
+</head>
+<body>
+
+<div class="topband">
+  <div class="inner">
+    <div class="eyebrow">✦ Volume 6 — Foundations, consolidated</div>
+    <h1>CRUD patterns, typography & color</h1>
+    <p>The three things every other volume assumed you already had. Create/Read/Update/Delete as standardized flows — not ad hoc per screen — plus the complete type ramp and color system in one place instead of scattered across five files.</p>
+  </div>
+</div>
+
+<div class="catnav">
+  <a href="#crud">CRUD Patterns</a><a href="#typography">Typography</a><a href="#color">Color</a>
+</div>
+
+<div class="shell">
+
+  <!-- ============ CRUD PATTERNS ============ -->
+  <section class="cat" id="crud">
+    <div class="cat-head"><div class="cat-tag">CRUD Patterns</div><h2>Create, Read, Update, Delete — standardized</h2><p>Clinical software rarely truly deletes anything — most "delete" actions here are actually discontinue / archive with an audit trail. That distinction changes which pattern applies.</p></div>
+
+    <div class="comp full" style="margin-bottom:16px;">
+      <div class="comp-label">When to use which edit pattern</div>
+      <table class="crud-matrix">
+        <thead><tr><th>Operation</th><th>Pattern</th><th>Use when</th></tr></thead>
+        <tbody>
+          <tr><td class="op">Create</td><td>Modal (short) or full page (long)</td><td>New patient = full page; new tag = modal</td></tr>
+          <tr><td class="op">Read</td><td>Detail card, label/value pairs</td><td>Always — the default resting state of any record</td></tr>
+          <tr><td class="op">Update — single field</td><td>Inline edit</td><td>One value, low risk (e.g. phone number)</td></tr>
+          <tr><td class="op">Update — related fields</td><td>Drawer edit</td><td>A few related fields without losing chart context</td></tr>
+          <tr><td class="op">Update — complex form</td><td>Full modal or page</td><td>Multi-step, validation-heavy (e.g. prescription)</td></tr>
+          <tr><td class="op">Delete — low stakes</td><td>Simple confirm</td><td>A draft note, an unsent message</td></tr>
+          <tr><td class="op">Delete — clinical record</td><td>Typed confirmation + reason</td><td>Discontinuing a medication, removing an allergy entry</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="comp-grid wide">
+      <div class="comp">
+        <div class="comp-label">Create — flow steps</div>
+        <div class="crud-flow"><span class="crud-step now">1. Demographics</span><span class="crud-arrow">→</span><span class="crud-step">2. Insurance</span><span class="crud-arrow">→</span><span class="crud-step">3. Consent</span></div>
+        <label class="fl">Full name</label><input class="input" value="Anjali Verma">
+        <button class="btn btn-primary btn-sm" style="margin-top:12px;">Continue</button>
+      </div>
+
+      <div class="comp">
+        <div class="comp-label">Read — detail view</div>
+        <div class="rv-row"><span class="k">MRN</span><span class="v mono">8827-441-09</span></div>
+        <div class="rv-row"><span class="k">DOB</span><span class="v">14 Mar 1985</span></div>
+        <div class="rv-row"><span class="k">Primary physician</span><span class="v">Dr. A. Nair</span></div>
+        <div class="rv-row"><span class="k">Allergies</span><span class="v"><span class="badge critical">Penicillin</span></span></div>
+      </div>
+
+      <div class="comp">
+        <div class="comp-label">Update — inline edit</div>
+        <div class="inline-edit" style="margin-bottom:8px;"><span>Phone: +91 98765 43210</span><span class="pencil">✎</span></div>
+        <div class="inline-edit editing"><input class="input" value="+91 98765 43211" style="border:none;background:transparent;padding:0;"><button class="btn btn-primary btn-sm">Save</button></div>
+      </div>
+
+      <div class="comp">
+        <div class="comp-label">Update — drawer edit</div>
+        <div class="drawer-edit">
+          <b style="font-size:12.5px;">Edit medication</b>
+          <div style="display:flex;gap:8px;margin-top:10px;"><input class="input" value="Metformin 500mg"><input class="input" value="BID" style="max-width:70px;"></div>
+          <div style="display:flex;gap:8px;margin-top:10px;justify-content:flex-end;"><button class="btn btn-ghost btn-sm">Cancel</button><button class="btn btn-primary btn-sm">Save changes</button></div>
+        </div>
+      </div>
+
+      <div class="comp">
+        <div class="comp-label">Delete — low-stakes, simple confirm</div>
+        <div style="font-size:12px;">Delete draft note?</div>
+        <div style="display:flex;gap:8px;margin-top:10px;"><button class="btn btn-secondary btn-sm">Keep</button><button class="btn btn-danger btn-sm">Delete</button></div>
+      </div>
+
+      <div class="comp full">
+        <div class="comp-label">Delete / discontinue — clinical record, typed confirmation</div>
+        <div class="confirm-modal" style="margin:0;">
+          <div class="ic">⚠</div>
+          <h4>Discontinue Metformin 500mg?</h4>
+          <p>This will end the active prescription and notify the pharmacy. This action is logged to the audit trail and cannot be silently undone.</p>
+          <label class="fl">Type "DISCONTINUE" to confirm</label>
+          <input class="confirm-type" placeholder="DISCONTINUE">
+          <div class="confirm-actions"><button class="btn btn-ghost btn-sm">Cancel</button><button class="btn-danger disabled btn btn-sm">Discontinue</button></div>
+        </div>
+      </div>
+
+      <div class="comp">
+        <div class="comp-label">Undo pattern — post-action safety net</div>
+        <div class="undo-toast">Tag removed <span class="u">Undo</span></div>
+        <div style="font-size:11px;color:var(--text-3);margin-top:8px;">6 second window before the toast dismisses and the action is final.</div>
+      </div>
+
+      <div class="comp">
+        <div class="comp-label">Bulk update / delete</div>
+        <div style="font-size:12px;">3 medications selected</div>
+        <div style="display:flex;gap:8px;margin-top:10px;"><button class="btn btn-secondary btn-sm">Bulk edit</button><button class="btn btn-danger btn-sm">Discontinue all</button></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TYPOGRAPHY ============ -->
+  <section class="cat" id="typography">
+    <div class="cat-head"><div class="cat-tag">Typography</div><h2>Complete type ramp</h2><p>Three families, each with exactly one job. Fraunces never appears in a sentence longer than a headline; Inter never carries a clinical number; Plex Mono is the only face that ever sits in a data column.</p></div>
+
+    <div class="comp full" style="margin-bottom:16px;">
+      <div class="type-specimen"><div class="type-meta"><div class="name">Display</div><div class="spec">Fraunces 600 · 40/46 · -0.02em</div><div class="use">Hero headlines only</div></div><div class="type-sample" style="font-family:'Fraunces';font-weight:600;font-size:40px;line-height:1.15;">Every vital sign.</div></div>
+      <div class="type-specimen"><div class="type-meta"><div class="name">H1</div><div class="spec">Fraunces 600 · 28/34</div><div class="use">Page title, hero stat</div></div><div class="type-sample" style="font-family:'Fraunces';font-weight:600;font-size:28px;">Lab Results</div></div>
+      <div class="type-specimen"><div class="type-meta"><div class="name">H2</div><div class="spec">Inter 700 · 22/28</div><div class="use">Section headers</div></div><div class="type-sample" style="font-weight:700;font-size:22px;">Medication Reconciliation</div></div>
+      <div class="type-specimen"><div class="type-meta"><div class="name">H3</div><div class="spec">Inter 700 · 16/22</div><div class="use">Card titles</div></div><div class="type-sample" style="font-weight:700;font-size:16px;">Ward census trend</div></div>
+      <div class="type-specimen"><div class="type-meta"><div class="name">H4</div><div class="spec">Inter 700 · 14/20</div><div class="use">Sub-groupings inside a card</div></div><div class="type-sample" style="font-weight:700;font-size:14px;">Current medications</div></div>
+      <div class="type-specimen"><div class="type-meta"><div class="name">Body</div><div class="spec">Inter 400 · 14/21</div><div class="use">Default reading text</div></div><div class="type-sample" style="font-size:14px;">Patient reports intermittent chest tightness on exertion, resolving with rest.</div></div>
+      <div class="type-specimen"><div class="type-meta"><div class="name">Body small</div><div class="spec">Inter 400 · 12.5/19</div><div class="use">Secondary/supporting text</div></div><div class="type-sample" style="font-size:12.5px;color:var(--text-2);">MRN 8827-441-09 · Dr. Nair (Primary) · Room 4B</div></div>
+      <div class="type-specimen"><div class="type-meta"><div class="name">Label</div><div class="spec">Inter 700 · 11/16 · uppercase, 0.06em</div><div class="use">Field labels, eyebrows</div></div><div class="type-sample" style="font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-3);">Dosage (mg)</div></div>
+      <div class="type-specimen"><div class="type-meta"><div class="name">Micro</div><div class="spec">Inter 600 · 10/14</div><div class="use">Timestamps, badges</div></div><div class="type-sample" style="font-weight:600;font-size:10px;color:var(--text-3);">Last updated 2 min ago</div></div>
+      <div class="type-specimen"><div class="type-meta"><div class="name">Data</div><div class="spec">IBM Plex Mono 600 · tabular-nums</div><div class="use">Every clinical number, always</div></div><div class="type-sample mono" style="font-weight:600;font-size:15px;">HR 88 · BP 132/84 · K⁺ 6.2 mmol/L</div></div>
+    </div>
+
+    <div class="comp-grid wide">
+      <div class="comp">
+        <div class="comp-label">Rules — do</div>
+        <div class="type-rule do"><span class="tag">DO</span>Use Plex Mono with tabular figures for any number in a table column, so digits never visually drift out of alignment.</div>
+        <div class="type-rule do"><span class="tag">DO</span>Reserve Fraunces for moments that need warmth — hero, AI panel, a handful of card headlines. Never body text.</div>
+        <div class="type-rule do"><span class="tag">DO</span>Keep line-height ≥1.5 for any paragraph a clinician reads under time pressure.</div>
+      </div>
+      <div class="comp">
+        <div class="comp-label">Rules — don't</div>
+        <div class="type-rule"><span class="tag">DON'T</span>Set a dosage, lab value, or vital sign in Inter — non-tabular digits can misalign in a way that reads as a different number at a glance.</div>
+        <div class="type-rule"><span class="tag">DON'T</span>Use more than one weight of Fraunces on a single screen — it starts to look decorative rather than intentional.</div>
+        <div class="type-rule"><span class="tag">DON'T</span>Go below 11px for anything a clinician needs to act on — micro-text is for metadata only, never for a clinical value.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ COLOR ============ -->
+  <section class="cat" id="color">
+    <div class="cat-head"><div class="cat-tag">Color</div><h2>Complete palette</h2><p>Full neutral and brand ramps for anyone building new surfaces, plus the fixed three-tone signal system (tint / base / dark) so text on a tinted background always meets contrast.</p></div>
+
+    <div class="comp full" style="margin-bottom:16px;">
+      <div class="ramp-label">Neutral ramp</div>
+      <div class="ramp">
+        <div style="background:#FFFFFF;"><span>0</span></div>
+        <div style="background:#F7F8FC;"><span>50</span></div>
+        <div style="background:#F4F5FA;"><span>100</span></div>
+        <div style="background:#E7E9F2;"><span>200</span></div>
+        <div style="background:#D6DAE6;"><span>300</span></div>
+        <div style="background:#B4BACC;color:#fff;"><span>400</span></div>
+        <div style="background:#9598A9;color:#fff;"><span>500</span></div>
+        <div style="background:#5A5E72;color:#fff;"><span>600</span></div>
+        <div style="background:#2C2E3E;color:#fff;"><span>800</span></div>
+        <div style="background:#111322;color:#fff;"><span>900</span></div>
+      </div>
+
+      <div class="ramp-label">Brand ramp — violet → blue</div>
+      <div class="ramp">
+        <div style="background:#F5F3FE;"><span>50</span></div>
+        <div style="background:#EEEBFD;"><span>100</span></div>
+        <div style="background:#D6CFFA;"><span>200</span></div>
+        <div style="background:#B3A5F3;color:#fff;"><span>300</span></div>
+        <div style="background:#8B76EB;color:#fff;"><span>400</span></div>
+        <div style="background:#4F3FE0;color:#fff;"><span>500</span></div>
+        <div style="background:#3F2FC0;color:#fff;"><span>600</span></div>
+        <div style="background:#2F6FED;color:#fff;"><span>Blue</span></div>
+        <div style="background:#2451B0;color:#fff;"><span>700</span></div>
+        <div style="background:#171233;color:#fff;"><span>900 / ink</span></div>
+      </div>
+    </div>
+
+    <div class="comp full" style="margin-bottom:16px;">
+      <div class="comp-label">Signal system — tint / base / dark, each with a defined job</div>
+      <div class="comp-grid wide" style="gap:12px;">
+        <div><div style="font-size:11px;font-weight:700;margin-bottom:6px;">Critical</div><div class="sig-set"><div style="background:var(--sig-critical-tint);color:var(--sig-critical-dark);">tint bg</div><div style="background:var(--sig-critical);color:#fff;">base</div><div style="background:var(--sig-critical-dark);color:#fff;">dark / text-on-tint</div></div></div>
+        <div><div style="font-size:11px;font-weight:700;margin-bottom:6px;">Caution</div><div class="sig-set"><div style="background:var(--sig-caution-tint);color:var(--sig-caution-dark);">tint bg</div><div style="background:var(--sig-caution);color:#fff;">base</div><div style="background:var(--sig-caution-dark);color:#fff;">dark / text-on-tint</div></div></div>
+        <div><div style="font-size:11px;font-weight:700;margin-bottom:6px;">Success</div><div class="sig-set"><div style="background:var(--sig-success-tint);color:var(--sig-success-dark);">tint bg</div><div style="background:var(--sig-success);color:#fff;">base</div><div style="background:var(--sig-success-dark);color:#fff;">dark / text-on-tint</div></div></div>
+        <div><div style="font-size:11px;font-weight:700;margin-bottom:6px;">Info</div><div class="sig-set"><div style="background:var(--sig-info-tint);color:var(--sig-info-dark);">tint bg</div><div style="background:var(--sig-info);color:#fff;">base</div><div style="background:var(--sig-info-dark);color:#fff;">dark / text-on-tint</div></div></div>
+      </div>
+      <div style="font-size:11px;color:var(--text-3);margin-top:10px;">The "dark" step exists specifically so badge/tag text on a tinted background always clears 4.5:1 contrast — the base tone alone often doesn't.</div>
+    </div>
+
+    <div class="comp-grid wide">
+      <div class="comp">
+        <div class="comp-label">Semantic usage table</div>
+        <table class="usage-table">
+          <tbody>
+            <tr><td><span class="swatch-sm" style="background:var(--brand-solid);"></span>Brand solid</td><td>Primary buttons, active nav, links</td></tr>
+            <tr><td><span class="swatch-sm" style="background:var(--pulse);"></span>Pulse mint</td><td>Live/active status only — never decorative</td></tr>
+            <tr><td><span class="swatch-sm" style="background:var(--sig-critical);"></span>Critical</td><td>Allergies, critical labs, destructive actions</td></tr>
+            <tr><td><span class="swatch-sm" style="background:var(--sig-caution);"></span>Caution</td><td>Fall risk, pending review, observation status</td></tr>
+            <tr><td><span class="swatch-sm" style="background:var(--sig-success);"></span>Success</td><td>Stable, resolved, confirmed</td></tr>
+            <tr><td><span class="swatch-sm" style="background:var(--sig-info);"></span>Info</td><td>Neutral status updates, awaiting data</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="comp">
+        <div class="comp-label">Contrast check — text on tint vs. base</div>
+        <div class="contrast-pair" style="background:var(--sig-critical-tint);color:var(--sig-critical-dark);margin-bottom:8px;">AA pass — dark-on-tint</div>
+        <div class="contrast-pair" style="background:var(--sig-critical);color:#fff;">AA pass — white-on-base</div>
+        <div style="font-size:11px;color:var(--text-3);margin-top:8px;">Never pair base-tone text directly on tint background — that combination fails AA and is a common mistake when badges get restyled ad hoc.</div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>Urvos — CRUD Patterns, Typography & Color, Volume 6. The foundation the other five volumes build on.</footer>
+</body>
+</html>
