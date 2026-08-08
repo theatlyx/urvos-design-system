@@ -1,8 +1,12 @@
 # Component Catalog
 
-## What this is, honestly
+# Component Catalog
 
-This is **not** Storybook. A real Storybook setup needs to run inside your actual Next.js repo (`npx storybook@latest init`, story files colocated with components, its own dev server) — I can't stand that up without your codebase attached. What's here instead is a plain inventory so you can see everything that exists in one place, and a recommended path to real Storybook when you're ready.
+[![Storybook](https://cdn.jsdelivr.net/gh/storybookjs/brand@main/badge/badge-storybook.svg)](https://theatlyx.github.io/urvos-design-system/)
+
+This catalog is now fully integrated with Storybook! You can view the interactive catalog and test all components at the link above.
+
+The inventory below is kept as a quick reference.
 
 ## Inventory — `/components`
 
@@ -21,23 +25,10 @@ This is **not** Storybook. A real Storybook setup needs to run inside your actua
 
 ## Path to real Storybook
 
-1. `npx storybook@latest init` inside your Next.js repo (it auto-detects Next 14 App Router).
-2. Point Storybook's `preview.ts` at `tokens.css` and `globals.css` so components render with real tokens, not defaults.
-3. One `.stories.tsx` file per component in this folder — for example:
+Storybook is now configured in this repository! You can run it locally with:
 
-```tsx
-// Button.stories.tsx
-import type { Meta, StoryObj } from "@storybook/react";
-import { Button } from "./Button";
-
-const meta: Meta<typeof Button> = { component: Button, title: "Primitives/Button" };
-export default meta;
-
-export const Primary: StoryObj<typeof Button> = { args: { variant: "primary", children: "Sign encounter" } };
-export const Loading: StoryObj<typeof Button> = { args: { variant: "primary", loading: true, children: "Saving" } };
-export const Danger: StoryObj<typeof Button> = { args: { variant: "danger", children: "Discontinue" } };
+```bash
+npm run storybook
 ```
 
-4. Add the `a11y` addon (`@storybook/addon-a11y`) and run it against every story — that's what actually catches the class of bug flagged in `ACCESSIBILITY.md`, automatically, on every future component.
-
-Once that's wired up, this markdown file becomes redundant and can be deleted — Storybook itself becomes the catalog.
+It is also automatically deployed to GitHub Pages via CI/CD on every push to the `main` branch.
