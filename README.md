@@ -1,5 +1,7 @@
 # Urvos Clinical OS — Design System
 
+[![Storybook](https://cdn.jsdelivr.net/gh/storybookjs/brand@main/badge/badge-storybook.svg)](https://theatlyx.github.io/urvos-design-system/)
+
 A continuous ECG pulse line as the visual throughline, color reserved strictly for clinical meaning, violet→blue brand identity. This version closes the gap between "design reference" and "production-ready Next.js package."
 
 ## What's in this zip
